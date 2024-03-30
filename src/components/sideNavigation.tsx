@@ -1,0 +1,64 @@
+"use client";
+import Image from "next/image";
+import { LayoutDashboard } from "lucide-react";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const SideNavigation = () => {
+  const pathname = usePathname();
+  let activeLink = (href: string) =>
+    pathname === href
+      ? "text-primary bg-background"
+      : "bg-foreground text-border";
+  return (
+    <div className="bg-foreground h-full w-[200px] fixed border-r-[1.2px] pl-[1rem] py-[1.4rem] flex flex-col gap-4">
+      <Image
+        src="/logo.svg"
+        width={137}
+        height={21}
+        alt="midiaboard"
+        className="w-[90%] mb-[3rem]"
+      />
+
+      <Link href="/home">
+        <Button
+          className={`${activeLink(
+            "/home"
+          )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
+        >
+          <LayoutDashboard className="pr-[0.5rem]" size={28} />
+          <p>Pedidos</p>
+        </Button>
+      </Link>
+      <Link href="/calendar">
+        <Button
+          className={`${activeLink(
+            "/calendar"
+          )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
+        >
+          <LayoutDashboard className="pr-[0.5rem]" size={28} />
+          <p>Calendário</p>
+        </Button>
+      </Link>
+      <Link href="/tasks">
+        <Button
+          className={`${activeLink(
+            "/tasks"
+          )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
+        >
+          <LayoutDashboard className="pr-[0.5rem]" size={28} />
+          <p>Tarefas</p>
+        </Button>
+      </Link>
+      <Button
+        className={`bg-foreground text-border hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
+      >
+        <LayoutDashboard className="pr-[0.5rem]" size={28} />
+        <p>Logout</p>
+      </Button>
+    </div>
+  );
+};
+
+export default SideNavigation;
