@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 207 71% 43%;
+    --primary: 198 86% 54%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 36 90% 46%;
@@ -71,6 +71,7 @@
     @apply border-border;
   }
   body {
+    height: 100%;
     @apply bg-background text-foreground antialiased;
   }
 }
