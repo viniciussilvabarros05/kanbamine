@@ -12,7 +12,7 @@ const SideNavigation = () => {
       ? "text-primary bg-background"
       : "bg-foreground text-border";
   return (
-    <div className="bg-foreground h-full w-[200px] fixed border-r-[1.2px] pl-[1rem] py-[1.4rem] flex flex-col gap-4">
+    <div className="bg-foreground h-full w-[200px] fixed top-0 border-r-[1.2px] pl-[1rem] py-[1.4rem] flex flex-col gap-4">
       <Image
         src="/logo.svg"
         width={137}
@@ -31,20 +31,20 @@ const SideNavigation = () => {
           <p>Pedidos</p>
         </Button>
       </Link>
-      <Link href="/calendar">
+      <Link href="/home/calendar">
         <Button
           className={`${activeLink(
-            "/calendar"
+            "/home/calendar"
           )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
         >
           <LayoutDashboard className="pr-[0.5rem]" size={28} />
           <p>Calendário</p>
         </Button>
       </Link>
-      <Link href="/tasks">
+      <Link href="/home/tasks">
         <Button
           className={`${activeLink(
-            "/tasks"
+            "/home/tasks"
           )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
         >
           <LayoutDashboard className="pr-[0.5rem]" size={28} />
