@@ -1,4 +1,5 @@
 import SideNavigation from "@/components/sideNavigation";
+import Header from "./_components/header";
 
 export default function layout({
   children,
@@ -8,7 +9,6 @@ export default function layout({
   return (
     <>
       {children}
-
       <SideNavigation />
     </>
   );

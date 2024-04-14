@@ -1,14 +1,15 @@
-"use client"
+"use client";
 
 import { addUser } from "@/_actions/addUser";
+import Header from "./_components/header";
 const DashboardPage = () => {
- const handleAddUser = async ()=>{
-  await addUser()
- }
+  const handleAddUser = async () => {
+    await addUser();
+  };
 
   return (
     <div>
-      <button onClick={handleAddUser}>Adicionar usuario</button>
+      <Header title="Pedidos"/>
     </div>
   );
 };

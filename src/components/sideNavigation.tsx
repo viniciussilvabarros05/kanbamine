@@ -12,7 +12,7 @@ const SideNavigation = () => {
       ? "text-primary bg-background"
       : "bg-foreground text-border";
   return (
-    <div className="bg-foreground h-full w-[200px] fixed top-0 border-r-[1.2px] pl-[1rem] py-[1.4rem] flex flex-col gap-4">
+    <div className="bg-foreground h-full shadow-md w-[200px] fixed top-0 pl-[1rem] py-[1.4rem] flex flex-col gap-4">
       <Image
         src="/logo.svg"
         width={137}
