@@ -1,8 +1,14 @@
+"use client"
+import { Card } from '@/components/ui/card';
+import { Calendar } from 'rsuite';
+import Header from '../_components/header';
+
 const Celendar = () => {
     return ( 
-        <div>
-            
-        </div>
+        <Card className="" > 
+        <Header title="Calendário"/>
+            <Calendar bordered  cellClassName={(date)=>("h-[30px]")}/>
+        </Card>
      );
 }
  
