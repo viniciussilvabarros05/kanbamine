@@ -7,9 +7,9 @@ export default function layout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="pl-[200px] pt-[60px]">
       {children}
       <SideNavigation />
-    </>
+    </div>
   );
 }

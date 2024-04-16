@@ -1,11 +1,9 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "@/providers/authContext";
 
 export default function Home() {

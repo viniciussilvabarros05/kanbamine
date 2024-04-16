@@ -23,9 +23,9 @@
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 207 71% 43%;
-    --accent-foreground: 0 0% 0% 34%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 79% 53%;
+    --destructive: 198 86% 54%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0 62%;
@@ -33,6 +33,20 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    
+    --orange-100: 36 100 83%;
+    --orange-300: 36 90 46%;
+
+    --grey-100 : 0 0 90%;
+    --grey-300 : 0 0 62%;
+
+    --red-100: 0 35 87%;
+    --red-300: 0 79 53%;
+
+    --green-100: 148 87 87%;
+    --green-300: 148 72 44%;
+
   }
 
   .dark {
@@ -71,7 +85,6 @@
     @apply border-border;
   }
   body {
-    height: 100%;
     @apply bg-background text-foreground antialiased;
   }
 }

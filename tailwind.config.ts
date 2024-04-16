@@ -19,6 +19,14 @@ const config = {
     },
     extend: {
       colors: {
+        red_100: "hsl(var(--red-100))",
+        red_300: "hsl(var(--red-300))",
+        orange_100: "hsl(var(--orange-100))",
+        orange_300: "hsl(var(--orange-300))",
+        grey_100: "hsl(var(--grey-100))",
+        grey_300: "hsl(var(--grey-300))",
+        green_100: "hsl(var(--green-100))",
+        green_300: "hsl(var(--green-300))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -52,6 +60,7 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        
       },
       borderRadius: {
         lg: "var(--radius)",

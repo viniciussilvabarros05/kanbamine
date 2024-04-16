@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { LayoutDashboard } from "lucide-react";
+import { Calendar, ClipboardListIcon, LayoutDashboard } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,7 +12,7 @@ const SideNavigation = () => {
       ? "text-primary bg-background"
       : "bg-foreground text-border";
   return (
-    <div className="bg-foreground h-full shadow-md w-[200px] fixed top-0 pl-[1rem] py-[1.4rem] flex flex-col gap-4">
+    <div className="bg-foreground h-full shadow-md w-[200px] fixed top-0 left-0 pl-[1rem] py-[1.4rem] flex flex-col gap-4">
       <Image
         src="/logo.svg"
         width={137}
@@ -37,7 +37,7 @@ const SideNavigation = () => {
             "/home/calendar"
           )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
         >
-          <LayoutDashboard className="pr-[0.5rem]" size={28} />
+          <Calendar  className="pr-[0.5rem]" size={28} />
           <p>Calendário</p>
         </Button>
       </Link>
@@ -47,9 +47,10 @@ const SideNavigation = () => {
             "/home/tasks"
           )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
         >
-          <LayoutDashboard className="pr-[0.5rem]" size={28} />
+          <ClipboardListIcon className="pr-[0.5rem]" size={28} />
           <p>Tarefas</p>
         </Button>
+        
       </Link>
       <Button
         className={`bg-foreground text-border hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
