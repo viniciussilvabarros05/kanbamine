@@ -5,7 +5,7 @@ interface HeaderProps {
 }
 const Header = ({ title }: HeaderProps) => {
   return (
-    <header className="flex fixed top-0 w-full left-[0] bg-white p-4 text-[#272727]">
+    <header className="flex fixed top-0 w-full left-[0] bg-white p-4 text-[#272727] z-40">
       <h1 className="ml-[200px] text-2xl font-bold">{title}</h1>
       <div className="ml-auto mr-4 flex gap-2">
         <User2Icon
