@@ -53,7 +53,7 @@ const DndExample = () => {
   return (
     <DndContext onDragEnd={onDragEnd}>
       <Header title="Tarefas" />
-      <Card className="flex gap-4 p-4 justify-start w-full min-h-[75vh] flex-col">
+      <Card className="flex gap-4 p-4 justify-start w-full min-h-[65vh] flex-col">
         <div className="w-full flex justify-around gap-4 h-[32px]">
           <RedLabel description="Para Fazer" />
           <OrangeLabel description="Andamento" />
@@ -68,8 +68,8 @@ const DndExample = () => {
                     className={
                       index === 1
                         ? " border border-t-0 border-b-0 border-gray-200 px-4" +
-                          " lg:w-1/3 w-full h-full bg-white"
-                        : " lg:w-1/3 w-full h-full bg-white"
+                          " lg:w-1/3 w-full min-h-[65vh] bg-white"
+                        : " lg:w-1/3 w-full min-h-[65vh] bg-white"
                     }
                     {...provided.droppableProps}
                     ref={provided.innerRef}
