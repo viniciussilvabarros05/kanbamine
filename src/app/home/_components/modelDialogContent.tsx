@@ -54,9 +54,32 @@ const ModelDialogContent = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <DialogDescription className="text-primary font-bold">
-          Informações do Evento
-        </DialogDescription>
+        <div className=" flex justify-between">
+          <DialogDescription className="text-primary font-bold">
+            Informações do Evento
+          </DialogDescription>
+          <Popover>
+            <PopoverTrigger className="w-[110px]">
+              <RedLabel description="Para fazer" className="cursor-pointer" />
+            </PopoverTrigger>
+            <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px]">
+              <Card className="w-full p-4 shadow-lg rounded-sm">
+                <div className="flex gap-2 items-center">
+                  <label className="w-3 h-3 rounded-full border border-green_300  bg-green_100"></label>
+                  <p className="text-[0.8rem] text-green_300">Concluído</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <label className="w-3 h-3 rounded-full border border-orange_300  bg-orange_100"></label>
+                  <p className="text-[0.8rem] text-orange_300">Andamento</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <label className="w-3 h-3 rounded-full border border-red_300 bg-red_100"></label>
+                  <p className="text-[0.8rem] text-red_300 ">Para Fazer</p>
+                </div>
+              </Card>
+            </PopoverContent>
+          </Popover>
+        </div>
       </DialogHeader>
       <Separator />
       <div className="flex flex-row w-full gap-[4rem]">

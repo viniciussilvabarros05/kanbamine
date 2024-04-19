@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import OrangeLabel from "../_components/orangeLabel";
 import RedLabel from "../_components/redLabel";
 import GreenLabel from "../_components/greenLabel";
+import { Button } from "@/components/ui/button";
 interface Cards {
   id: number;
   title: string;
@@ -54,6 +55,9 @@ const DndExample = () => {
     <DndContext onDragEnd={onDragEnd}>
       <Header title="Tarefas" />
       <Card className="flex gap-4 p-4 justify-start w-full min-h-[65vh] flex-col">
+        <Button variant="outline" className="bg-white text-accent w-[120px] h-[30px] rounded-sm">
+           + Criar Tarefa
+        </Button>
         <div className="w-full flex justify-around gap-4 h-[32px]">
           <RedLabel description="Para Fazer" />
           <OrangeLabel description="Andamento" />
