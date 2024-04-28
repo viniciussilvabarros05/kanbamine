@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import {getFirestore} from 'firebase/firestore'
-
+import firebase from "firebase/compat/app"
+import "firebase/compat/auth";
+import 'firebase/compat/firestore'
+import "firebase/compat/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
-
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app)
-export const auth = getAuth()
+firebase.initializeApp(firebaseConfig);
+export const db = firebase.firestore()
+export const auth = firebase.auth();
+export const storage = firebase.storage();

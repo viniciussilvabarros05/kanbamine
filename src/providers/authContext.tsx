@@ -1,9 +1,9 @@
 "use client";
-import { auth } from "@/_firebase/config";
-import { signInWithEmailAndPassword, User } from "firebase/auth";
+import { UserInfo } from "firebase/auth";
 import { createContext, Dispatch, ReactNode, useContext, useState } from "react";
 import Cookie from 'js-cookie'
 import { useRouter } from "next/navigation";
+import { auth } from "@/_firebase/config";
 export const AuthContext = createContext({} as AuthContextProps);
 
 interface AuthContextProviderProps {
@@ -11,26 +11,27 @@ interface AuthContextProviderProps {
 }
 
 interface AuthContextProps {
-  user: User | null | undefined;
-  setUser: Dispatch<User | null | undefined>;
+  user: UserInfo|undefined ;
+  setUser: Dispatch<UserInfo>;
   Authenticate: (email: string, password: string) => Promise<void>;
 }
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<User | null>();
+  const [user, setUser] = useState<UserInfo>();
     const router = useRouter()
   async function Authenticate(email: string, password: string) {
     
 
     try {
-      const userCredentials = await signInWithEmailAndPassword (
-        auth,
+      const userCredentials = await auth.signInWithEmailAndPassword (
         email,
         password
       );
-      Cookie.set('uid', userCredentials.user.uid)
-      setUser(userCredentials.user);
-      router.push("/home")
+      if(userCredentials.user){
+        Cookie.set('uid', userCredentials.user.uid)
+        setUser(userCredentials.user);
+        router.push("/home")
+      }
       
     } catch (error) {
       console.log(error);
