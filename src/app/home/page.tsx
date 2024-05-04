@@ -44,11 +44,11 @@ const DashboardPage = () => {
   }
 
   function filterRequestForStatus(){
-    setRequestsFilter(requests.filter(item => item.status === status));
+    setRequestsFilter(requests.filter(item => item.status === status).reverse());
   };
 
   function LabelStatus(status:0|1|2){
-    
+
     let labels = {
       "0": <RedLabel description="Para fazer"/>,
       "1": <OrangeLabel description="Andamento"/>,
@@ -68,7 +68,7 @@ const DashboardPage = () => {
       querySnaphot.forEach((doc) => {
         requests.push({...doc.data(), id:String(doc.id)} as RequestPropsWithId);
       });
-      setRequests(requests.reverse());
+      setRequests(requests);
       setIsLoading(false);
     });
     return () => unsubscribe();
