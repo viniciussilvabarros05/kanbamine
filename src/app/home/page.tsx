@@ -1,23 +1,6 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   TableHeader,
   TableRow,
@@ -26,109 +9,153 @@ import {
   TableCell,
   Table,
 } from "@/components/ui/table";
-import  ModelDialogContent  from "./_components/modelDialogContent";
-import { Download, FolderDown } from "lucide-react";
-import { useState } from "react";
+import ModelDialogContent from "./_components/modelDialogContent";
+import { useEffect, useState } from "react";
 import GreenLabel from "./_components/greenLabel";
 import Header from "./_components/header";
 import OrangeLabel from "./_components/orangeLabel";
 import RedLabel from "./_components/redLabel";
+import { db } from "@/_firebase/config";
+import { RequestProps } from "@/entities/request";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { LoaderCircle } from "lucide-react";
+
+interface RequestPropsWithId extends RequestProps{
+  id: string;
+}
+
 const DashboardPage = () => {
-  const [activeButton, setActiveButton] = useState("");
+
+  const [requests, setRequests] = useState<RequestPropsWithId[]>(
+    [] as RequestPropsWithId[]
+  );
+  const [requestsFilter, setRequestsFilter] = useState<RequestPropsWithId[]>([] as RequestPropsWithId[])
+  const [status, setStatus] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const activeButtons = {
     red: "bg-red_100 ",
     orange: "bg-orange_100 ",
-    grey: "bg-grey_100 ",
+    green: "bg-green_100 ",
   };
 
-  function HandleFilterButton(value: string) {
-    setActiveButton(value);
+  function handleFilterStatus(value: number) {
+    setStatus(value);
   }
 
+  function filterRequestForStatus(){
+    setRequestsFilter(requests.filter(item => item.status === status));
+  };
+
+  function LabelStatus(status:"0"|"1"|"2"){
+    let labels = {
+      "0": <RedLabel description="Para fazer"/>,
+      "1": <OrangeLabel description="Andamento"/>,
+      "2": <GreenLabel description="Concluído"/>,
+    }
+
+    return labels[status]
+  }
+
+  useEffect(()=>{
+    filterRequestForStatus()
+  },[requests, status])
+
+  useEffect(() => {
+    const unsubscribe = db.collection("requests").onSnapshot((querySnaphot) => {
+      let requests: RequestPropsWithId[] = [];
+      querySnaphot.forEach((doc) => {
+        requests.push({...doc.data(), id:String(doc.id)} as RequestPropsWithId);
+      });
+      setRequests(requests.reverse());
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
   return (
     <>
       <Header title="Pedidos" />
       <Card className="m-auto flex w-full h-[75vh] p-4 flex-col">
         <div className="w-full flex gap-2">
           <button
-            onClick={() => HandleFilterButton("1")}
+            onClick={() => handleFilterStatus(0)}
             className={`${
-              activeButton == "1" && activeButtons.red
+              status == 0 && activeButtons.red
             } " p-2 text-sm font-medium border-red_300 text-red_300 border rounded-sm transition-all duration-300 "`}
           >
-            Urgentes
+            Para Fazer
           </button>
           <button
-            onClick={() => HandleFilterButton("2")}
+            onClick={() => handleFilterStatus(1)}
             className={`${
-              activeButton == "2" && activeButtons.orange
+              status == 1 && activeButtons.orange
             } " p-2 text-sm font-medium border-orange_300 text-orange_300 border rounded-sm transition-all duration-300 "`}
           >
-            Pouco urgentes
+           Andamento
           </button>
           <button
-            onClick={() => HandleFilterButton("3")}
+            onClick={() => handleFilterStatus(2)}
             className={`${
-              activeButton == "3" && activeButtons.grey
-            } " p-2 text-sm font-medium border-grey_300 border text-grey_300 rounded-sm transition-all duration-300 "`}
+              status == 2 && activeButtons.green
+            } " p-2 text-sm font-medium border-green_300 border text-green_300 rounded-sm transition-all duration-300 "`}
           >
-            Não urgentes
+            Concluído
           </button>
         </div>
-        <Dialog>
-          <Table className="mt-4">
-            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Nº</TableHead>
-                <TableHead>Nome</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead className="text-left">Data</TableHead>
-                <TableHead className="text-center w-[100px]">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <DialogTrigger asChild>
+        {isLoading && (
+          <div className="w-full h-full flex items-center justify-center">
+            <LoaderCircle
+              size={50}
+              className="animate-spin text-primary m-auto"
+            />
+          </div>
+        )}
+        {!isLoading && (
+          <Dialog>
+            <Table className="mt-4">
+              <TableHeader>
                 <TableRow>
-                  <TableCell className="font-medium">INV001</TableCell>
-                  <TableCell className="text-left">John Doe</TableCell>
-                  <TableCell className="text-left">(98)9 99999999</TableCell>
-                  <TableCell className="text-left">
-                    14 de Janeiro de 2024
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <RedLabel description="Para fazer" />
-                  </TableCell>
+                  <TableHead className="w-[100px]">Nº</TableHead>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Telefone</TableHead>
+                  <TableHead className="text-left">Data</TableHead>
+                  <TableHead className="text-center w-[100px]">
+                    Status
+                  </TableHead>
                 </TableRow>
-              </DialogTrigger>
-              <DialogTrigger asChild>
-                <TableRow>
-                  <TableCell className="font-medium">INV001</TableCell>
-                  <TableCell className="text-left">John Doe</TableCell>
-                  <TableCell className="text-left">(98)9 99999999</TableCell>
-                  <TableCell className="text-left">
-                    14 de Janeiro de 2024
-                  </TableCell>
-                  <TableCell className="text-center  ">
-                    <OrangeLabel description="Andamento" />
-                  </TableCell>
-                </TableRow>
-              </DialogTrigger>
-              <TableRow>
-                <TableCell className="font-medium">INV001</TableCell>
-                <TableCell className="text-left">John Doe</TableCell>
-                <TableCell className="text-left">(98)9 99999999</TableCell>
-                <TableCell className="text-left">
-                  14 de Janeiro de 2024
-                </TableCell>
-                <TableCell className="text-center">
-                  <GreenLabel description="Concluido" />
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <ModelDialogContent />
-        </Dialog>
+              </TableHeader>
+
+              <TableBody>
+                {requestsFilter?.map((request, index) => {
+                  return (
+                    <DialogTrigger asChild key={request.id}>
+                      <TableRow className={`animate-fadeIn`}>
+                        <TableCell className="font-medium">{index}</TableCell>
+                        <TableCell className="text-left">
+                          {request.name}
+                        </TableCell>
+                        <TableCell className="text-left">
+                          {request.phone}
+                        </TableCell>
+                        <TableCell className="text-left">
+                          {format(
+                            new Date(request.date),
+                            "dd 'de' MMMM 'de' yyyy",
+                            { locale: ptBR }
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {LabelStatus(String(request.status))}
+                        </TableCell>
+                      </TableRow>
+                    </DialogTrigger>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            <ModelDialogContent />
+          </Dialog>
+        )}
       </Card>
     </>
   );

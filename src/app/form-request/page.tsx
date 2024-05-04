@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { SendRequest } from "@/_actions/request";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/_firebase/config";
+import { InputNumber } from "@/components/inputNumber";
 
 const FormRequest = () => {
   const [images, setImages] = useState<
@@ -50,7 +51,7 @@ const FormRequest = () => {
     defaultValues: {
       name: "Teste",
       phone: "98989898989898",
-      date: "12/06/2024",
+      date: "12-06-2024",
       time: "Teste",
       objective: "Teste",
       theme: "Teste",
@@ -61,7 +62,10 @@ const FormRequest = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsloading(true);
     try {
-      await SendRequest({ ...values, images });
+      const dataString = values.date;
+      const [dia, mes, ano] = dataString.split('-');
+      const date = new Date(Number(ano), Number(mes) - 1, Number(dia)).toISOString(); 
+      await SendRequest({ ...values, images, date, status:0 });
       setImages([]);
       setIsloading(false);
     } catch (error) {
@@ -128,7 +132,7 @@ const FormRequest = () => {
                           Telefone para contato
                         </FormLabel>
                         <FormControl>
-                          <Input
+                          <InputNumber
                             {...field}
                             className="h-8 outline-none border border-primary rounded-sm px-2 py-[0.5rem] mb-2 w-full bg-white"
                           />
