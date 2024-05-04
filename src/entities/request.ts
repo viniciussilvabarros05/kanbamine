@@ -13,7 +13,7 @@ export type RequestProps = {
   objective: string;
   theme: string;
   description: string;
-  status?: string;
+  status: 0|1|2;
   urgency?: string;
 };
 
