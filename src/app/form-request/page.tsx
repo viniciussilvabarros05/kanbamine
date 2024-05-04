@@ -293,8 +293,8 @@ const FormRequest = () => {
                               type="file"
                               accept="image/png, image/jpg"
                               className="hidden"
-                              onClick={(e) => (e.target.value = null)}
-                              onChange={(e) =>
+                              onClick={(e:any) => (e.target.value = null)}
+                              onChange={(e:any) =>
                                 e.target.files.length > 0 &&
                                 setImages([
                                   ...images,

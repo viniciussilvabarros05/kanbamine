@@ -47,7 +47,8 @@ const DashboardPage = () => {
     setRequestsFilter(requests.filter(item => item.status === status));
   };
 
-  function LabelStatus(status:"0"|"1"|"2"){
+  function LabelStatus(status:0|1|2){
+    
     let labels = {
       "0": <RedLabel description="Para fazer"/>,
       "1": <OrangeLabel description="Andamento"/>,
@@ -145,7 +146,7 @@ const DashboardPage = () => {
                           )}
                         </TableCell>
                         <TableCell className="text-center">
-                          {LabelStatus(String(request.status))}
+                          {LabelStatus(request.status)}
                         </TableCell>
                       </TableRow>
                     </DialogTrigger>
