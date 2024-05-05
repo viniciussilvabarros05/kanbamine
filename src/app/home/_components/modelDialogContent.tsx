@@ -3,8 +3,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
 } from "@/components/ui/carousel";
 import {
   DialogContent,
@@ -16,43 +14,67 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import RedLabel from "./redLabel";
-import { Download, FolderDown } from "lucide-react";
+import { Download, FolderDown, Plus } from "lucide-react";
 import {
   PopoverTrigger,
   PopoverContent,
   Popover,
 } from "@/components/ui/popover";
+import { RequestPropsWithId } from "../page";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
+import { db, storage } from "@/_firebase/config";
+import { ImagesProps } from "@/entities/request";
+import { useEffect, useState } from "react";
 
-const ModelDialogContent = () => {
+interface Props {
+  request: RequestPropsWithId;
+}
+
+const ModelDialogContent = ({ request }: Props) => {
+  const [images, setImages] = useState<ImagesProps[]>([]);
+
+  useEffect(() => {
+    let imagesUrl:ImagesProps[]= []
+    let promises: any[] = []
+    if(request?.images[0]?.imageUrl?.includes("https")){
+      setImages(request.images)
+      return
+    }
+    if(request.images.length == 0 ){
+      setImages([])
+      return
+    }
+    request.images.forEach((image) => {
+      promises.push(storage
+        .ref()
+        .child(image.imageUrl)
+        .getDownloadURL()
+        .then((url) => {
+          return {...image,imageUrl: url}
+        }))
+    });
+    Promise.all(promises).then(value=> setImages(value))
+  }, [request]);
+
+  useEffect(()=>{
+    if(images.length > 0 ){
+      db.collection("requests").doc(request.id).update({
+        images
+      })
+    }
+  },[images])
+
+  let dateFormated = format(new Date(request.date), "dd 'de' MMMM 'de' yyyy", {
+    locale: ptBR,
+  });
   return (
     <DialogContent className="bg-white text-black w-[900px]">
       <DialogHeader className="text-gray-600">
         <div className="flex gap-4 items-center">
           <DialogTitle className="text-gray-600 text-2xl flex gap-4">
-            # Pedido 01 - John Doe
+            # Pedido - {request.name}
           </DialogTitle>
-
-          <Popover>
-            <PopoverTrigger className="w-[110px]">
-              <RedLabel description="Urgente" className="cursor-pointer" />
-            </PopoverTrigger>
-            <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px]">
-              <Card className="w-full p-4 shadow-lg rounded-sm">
-                <div className="flex gap-2 items-center">
-                  <label className="w-3 h-3 rounded-full border border-grey_300  bg-grey_100"></label>
-                  <p className="text-[0.8rem] text-gray-600">Não Urgente</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <label className="w-3 h-3 rounded-full border border-orange_300  bg-orange_100"></label>
-                  <p className="text-[0.8rem] text-orange_300">Pouco Urgente</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <label className="w-3 h-3 rounded-full border border-red_300 bg-red_100"></label>
-                  <p className="text-[0.8rem] text-red_300 ">Urgente</p>
-                </div>
-              </Card>
-            </PopoverContent>
-          </Popover>
         </div>
         <div className=" flex justify-between">
           <DialogDescription className="text-primary font-bold">
@@ -85,45 +107,74 @@ const ModelDialogContent = () => {
       <div className="flex flex-row w-full gap-[4rem]">
         <div className="flex flex-col flex-[1] w-full">
           <label className="text-primary text-[0.8rem]">Nome do Evento</label>
-          <input className="border border-primary rounded-sm px-2 py-1 mb-2"></input>
+          <input
+            className="border border-primary rounded-sm px-2 py-1 mb-2"
+            readOnly
+            value={request.name}
+          />
 
           <label className="text-primary text-[0.8rem]">Data do Evento</label>
-          <input className="border border-primary rounded-sm px-2 py-1 mb-2"></input>
+          <input
+            className="border border-primary rounded-sm px-2 py-1 mb-2"
+            readOnly
+            value={dateFormated}
+          />
 
           <label className="text-primary text-[0.8rem]">Horário</label>
-          <input className="border border-primary rounded-sm px-2 py-1 mb-2"></input>
+          <input
+            className="border border-primary rounded-sm px-2 py-1 mb-2"
+            readOnly
+            value={""}
+          />
 
           <label className="text-primary text-[0.8rem]">Objetivo</label>
-          <input className="border border-primary rounded-sm px-2 py-1 mb-2"></input>
+          <input
+            className="border border-primary rounded-sm px-2 py-1 mb-2"
+            readOnly
+            value={request.objective}
+          />
 
           <label className="text-primary text-[0.8rem]">Tema</label>
-          <input className="border border-primary rounded-sm px-2 py-1 mb-2"></input>
+          <input
+            className="border border-primary rounded-sm px-2 py-1 mb-2"
+            readOnly
+            value={request.theme}
+          />
 
           <label className="text-primary text-[0.8rem]">
             Descrição do Evento
           </label>
-          <textarea className="border border-primary rounded-sm px-2 py-1 mb-2"></textarea>
+          <textarea
+            className="border border-primary rounded-sm px-2 py-1 mb-2"
+            readOnly
+            value={request.description}
+          ></textarea>
         </div>
         <div className="flex flex-1 flex-col items-center">
-          <Carousel className="w-[80%]">
+          <Carousel className="w-[100%] h-[100%] mb-4">
+            <label className="text-primary text-[0.8rem]">
+              Fotos para a Arte
+            </label>
             <CarouselContent>
-              {Array.from({ length: 5 }).map((_, index) => (
+              {images?.map((image, index) => (
                 <CarouselItem key={index} className="basis-[80%]">
                   <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6 relative">
-                        <Download className="text-primary absolute top-4 right-4" />
-                        <span className="text-4xl font-semibold">
-                          {index + 1}
-                        </span>
+                    <Card className="mt-4">
+                      <CardContent className="flex aspect-square flex-col items-center justify-center p-6 relative">
+                        <img src={image.imageUrl} alt="previsualização" />
+                        <input
+                          placeholder="Descrição da foto"
+                          value={image.description}
+                          type="text"
+                          readOnly
+                          className="border-primary outline-none  border-b border-0  mt-auto py-1 px-2 w-[100%]"
+                        />
                       </CardContent>
                     </Card>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
           </Carousel>
 
           <Button className="mt-4">

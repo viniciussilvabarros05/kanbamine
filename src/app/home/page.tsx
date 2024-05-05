@@ -21,17 +21,20 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { LoaderCircle } from "lucide-react";
 
-interface RequestPropsWithId extends RequestProps{
+export interface RequestPropsWithId extends RequestProps {
   id: string;
 }
 
 const DashboardPage = () => {
-
   const [requests, setRequests] = useState<RequestPropsWithId[]>(
     [] as RequestPropsWithId[]
   );
-  const [requestsFilter, setRequestsFilter] = useState<RequestPropsWithId[]>([] as RequestPropsWithId[])
+  const [requestsFilter, setRequestsFilter] = useState<RequestPropsWithId[]>(
+    [] as RequestPropsWithId[]
+  );
   const [status, setStatus] = useState(0);
+  const [currentRequestModel, setCurrentRequestModel] =
+    useState<RequestPropsWithId|null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const activeButtons = {
     red: "bg-red_100 ",
@@ -43,30 +46,34 @@ const DashboardPage = () => {
     setStatus(value);
   }
 
-  function filterRequestForStatus(){
-    setRequestsFilter(requests.filter(item => item.status === status).reverse());
-  };
-
-  function LabelStatus(status:0|1|2){
-
-    let labels = {
-      "0": <RedLabel description="Para fazer"/>,
-      "1": <OrangeLabel description="Andamento"/>,
-      "2": <GreenLabel description="Concluído"/>,
-    }
-
-    return labels[status]
+  function filterRequestForStatus() {
+    setRequestsFilter(
+      requests.filter((item) => item.status === status).reverse()
+    );
   }
 
-  useEffect(()=>{
-    filterRequestForStatus()
-  },[requests, status])
+  function LabelStatus(status: 0 | 1 | 2) {
+    let labels = {
+      "0": <RedLabel description="Para fazer" />,
+      "1": <OrangeLabel description="Andamento" />,
+      "2": <GreenLabel description="Concluído" />,
+    };
+
+    return labels[status];
+  }
+
+  useEffect(() => {
+    filterRequestForStatus();
+  }, [requests, status]);
 
   useEffect(() => {
     const unsubscribe = db.collection("requests").onSnapshot((querySnaphot) => {
       let requests: RequestPropsWithId[] = [];
       querySnaphot.forEach((doc) => {
-        requests.push({...doc.data(), id:String(doc.id)} as RequestPropsWithId);
+        requests.push({
+          ...doc.data(),
+          id: String(doc.id),
+        } as RequestPropsWithId);
       });
       setRequests(requests);
       setIsLoading(false);
@@ -92,7 +99,7 @@ const DashboardPage = () => {
               status == 1 && activeButtons.orange
             } " p-2 text-sm font-medium border-orange_300 text-orange_300 border rounded-sm transition-all duration-300 "`}
           >
-           Andamento
+            Andamento
           </button>
           <button
             onClick={() => handleFilterStatus(2)}
@@ -129,7 +136,11 @@ const DashboardPage = () => {
               <TableBody>
                 {requestsFilter?.map((request, index) => {
                   return (
-                    <DialogTrigger asChild key={request.id}>
+                    <DialogTrigger
+                      asChild
+                      key={request.id}
+                      onClick={() => setCurrentRequestModel(request)}
+                    >
                       <TableRow className={`animate-fadeIn`}>
                         <TableCell className="font-medium">{index}</TableCell>
                         <TableCell className="text-left">
@@ -154,7 +165,9 @@ const DashboardPage = () => {
                 })}
               </TableBody>
             </Table>
-            <ModelDialogContent />
+            {currentRequestModel && (
+              <ModelDialogContent request={currentRequestModel} />
+            )}
           </Dialog>
         )}
       </Card>
