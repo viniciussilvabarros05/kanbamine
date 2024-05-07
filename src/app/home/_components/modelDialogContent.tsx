@@ -45,6 +45,7 @@ const ModelDialogContent = ({ request }: Props) => {
   },[request])
 
   useEffect(() => {
+    console.log(request.images)
     let imagesUrl:ImagesProps[]= []
     let promises: any[] = []
     if(request?.images[0]?.imageUrl?.includes("https")){
@@ -65,6 +66,7 @@ const ModelDialogContent = ({ request }: Props) => {
         }))
     });
     Promise.all(promises).then(imagesUrl=> {
+      console.log(imagesUrl)
       db.collection("requests").doc(request.id).update({
         imagesUrl
       }).then(()=>{

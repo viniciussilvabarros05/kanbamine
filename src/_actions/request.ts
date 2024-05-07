@@ -10,7 +10,8 @@ export async function SendRequest(request: RequestProps) {
     let uploadPromises = [];
     request.date = request.date
     for (let image of request.images) {
-      let ref = `images/${doc}.png`;
+      let time = String(new Date().getTime())
+      let ref = `images/${time}.png`;
       if (image.blob) {
         const file = new Blob([image?.blob], { type: image?.blob?.type });
         uploadPromises.push(storageRef.child(ref).put(file));
