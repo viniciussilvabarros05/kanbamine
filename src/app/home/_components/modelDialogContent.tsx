@@ -14,25 +14,35 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import RedLabel from "./redLabel";
-import { Download, FolderDown, Plus } from "lucide-react";
+import { Download, FolderDown, LoaderCircle, Plus } from "lucide-react";
 import {
   PopoverTrigger,
   PopoverContent,
   Popover,
 } from "@/components/ui/popover";
-import { RequestPropsWithId } from "../page";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
 import { db, storage } from "@/_firebase/config";
-import { ImagesProps } from "@/entities/request";
+import { ImagesProps, RequestPropsWithId, status } from "@/entities/request";
 import { useEffect, useState } from "react";
-
+import { ChangeStatus } from "@/_actions/changeStatus";
+import OrangeLabel from "./orangeLabel";
+import GreenLabel from "./greenLabel";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 interface Props {
   request: RequestPropsWithId;
 }
 
 const ModelDialogContent = ({ request }: Props) => {
   const [images, setImages] = useState<ImagesProps[]>([]);
+  const [statusRequest, setStatusRequest] = useState<status>(request.status)
+  const [loadingStatusChange, setLoadingStatusChange] = useState(false)
+  const { toast } = useToast()
+  useEffect(()=>{
+    setImages([])
+    setStatusRequest(request.status)
+  },[request])
 
   useEffect(() => {
     let imagesUrl:ImagesProps[]= []
@@ -54,16 +64,56 @@ const ModelDialogContent = ({ request }: Props) => {
           return {...image,imageUrl: url}
         }))
     });
-    Promise.all(promises).then(value=> setImages(value))
-  }, [request]);
-
-  useEffect(()=>{
-    if(images.length > 0 ){
+    Promise.all(promises).then(imagesUrl=> {
       db.collection("requests").doc(request.id).update({
-        images
+        imagesUrl
+      }).then(()=>{
+        setImages(imagesUrl)
       })
     }
-  },[images])
+    )
+  }, [request]);
+
+  function handleChangeStatus(status: status){
+    let descriptionStatus = {
+      0:"Para fazer",
+      1: "Andamento",
+      2: "Concluído",
+    }
+    setLoadingStatusChange(true)
+    ChangeStatus({request,status}).then(()=>{
+        setLoadingStatusChange(false)
+        setStatusRequest(status)
+        toast({
+          title: "Mudança de status" ,
+          description: "Status Mudado para: " + descriptionStatus[status] ,
+          action: (
+            <ToastAction altText="clique em fechar para sumir o aviso">fechar</ToastAction>
+          ),
+        })
+      }).catch((error)=>{
+        setLoadingStatusChange(false)
+        toast({
+          variant: "destructive",
+          title: "Erro na mudança de status" ,
+          description: "Não foi possível mudar o status da tarefa" ,
+          action: (
+            <ToastAction altText="clique em fechar para sumir o aviso">fechar</ToastAction>
+          ),
+        })
+      })
+  }
+
+  function LabelStatus(status:status) {
+    let labels = {
+      "0": <RedLabel description="Para fazer" className="cursor-pointer w-[120px]"/>,
+      "1": <OrangeLabel description="Andamento" className="cursor-pointer w-[120px]"/>,
+      "2": <GreenLabel description="Concluído" className="cursor-pointer w-[120px]"/>,
+    };
+
+    return labels[status];
+  }
+
 
   let dateFormated = format(new Date(request.date), "dd 'de' MMMM 'de' yyyy", {
     locale: ptBR,
@@ -81,22 +131,23 @@ const ModelDialogContent = ({ request }: Props) => {
             Informações do Evento
           </DialogDescription>
           <Popover>
-            <PopoverTrigger className="w-[110px]">
-              <RedLabel description="Para fazer" className="cursor-pointer" />
+            <PopoverTrigger className="outline-none flex gap-2 items-center justify-center">
+              {loadingStatusChange &&<LoaderCircle size={20} className="animate-spin text-primary" />}
+              {LabelStatus(statusRequest)}
             </PopoverTrigger>
             <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px]">
-              <Card className="w-full p-4 shadow-lg rounded-sm">
-                <div className="flex gap-2 items-center">
+              <Card className="w-full shadow-lg rounded-sm cursor-pointer">
+                <div className="flex gap-2 items-center hover:bg-gray-100 p-2">
                   <label className="w-3 h-3 rounded-full border border-green_300  bg-green_100"></label>
-                  <p className="text-[0.8rem] text-green_300">Concluído</p>
+                  <p className="text-[0.8rem] text-green_300" onClick={()=> handleChangeStatus(2)}>Concluído</p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center hover:bg-gray-100 p-2">
                   <label className="w-3 h-3 rounded-full border border-orange_300  bg-orange_100"></label>
-                  <p className="text-[0.8rem] text-orange_300">Andamento</p>
+                  <p className="text-[0.8rem] text-orange_300" onClick={()=> handleChangeStatus(1)}>Andamento</p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center hover:bg-gray-100 p-2">
                   <label className="w-3 h-3 rounded-full border border-red_300 bg-red_100"></label>
-                  <p className="text-[0.8rem] text-red_300 ">Para Fazer</p>
+                  <p className="text-[0.8rem] text-red_300 " onClick={()=> handleChangeStatus(0)}> Para Fazer</p>
                 </div>
               </Card>
             </PopoverContent>
@@ -161,7 +212,7 @@ const ModelDialogContent = ({ request }: Props) => {
                   <div className="p-1">
                     <Card className="mt-4">
                       <CardContent className="flex aspect-square flex-col items-center justify-center p-6 relative">
-                        <img src={image.imageUrl} alt="previsualização" />
+                        <img src={image.imageUrl} alt="previsualização"  className="w-[200px]"/>
                         <input
                           placeholder="Descrição da foto"
                           value={image.description}

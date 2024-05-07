@@ -16,14 +16,12 @@ import Header from "./_components/header";
 import OrangeLabel from "./_components/orangeLabel";
 import RedLabel from "./_components/redLabel";
 import { db } from "@/_firebase/config";
-import { RequestProps } from "@/entities/request";
+import { RequestProps, RequestPropsWithId } from "@/entities/request";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { LoaderCircle } from "lucide-react";
 
-export interface RequestPropsWithId extends RequestProps {
-  id: string;
-}
+
 
 const DashboardPage = () => {
   const [requests, setRequests] = useState<RequestPropsWithId[]>(
@@ -54,7 +52,7 @@ const DashboardPage = () => {
 
   function LabelStatus(status: 0 | 1 | 2) {
     let labels = {
-      "0": <RedLabel description="Para fazer" />,
+      "0": <RedLabel description="Para fazer"/>,
       "1": <OrangeLabel description="Andamento" />,
       "2": <GreenLabel description="Concluído" />,
     };

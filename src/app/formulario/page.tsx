@@ -63,9 +63,13 @@ const FormRequest = () => {
     setIsloading(true);
     try {
       const dataString = values.date;
-      const [dia, mes, ano] = dataString.split('-');
-      const date = new Date(Number(ano), Number(mes) - 1, Number(dia)).toISOString(); 
-      await SendRequest({ ...values, images, date, status:0 });
+      const [dia, mes, ano] = dataString.split("-");
+      const date = new Date(
+        Number(ano),
+        Number(mes) - 1,
+        Number(dia)
+      ).toISOString();
+      await SendRequest({ ...values, images, date, status: 0 });
       setImages([]);
       setIsloading(false);
     } catch (error) {
@@ -88,7 +92,7 @@ const FormRequest = () => {
 
   return (
     <div className="min-h-[100vh] w-full flex items-center justify-center">
-      <Card className="w-[60%]  m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
+      <Card className="w-[60%] h-[80%]  m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
         <Image
           src="/logo.svg"
           width={137}
@@ -235,10 +239,38 @@ const FormRequest = () => {
                     Enviar
                   </Button>
                 </div>
-                <Carousel className="w-[100%] h-[100%] mb-4">
-                  <label className="text-primary text-[0.8rem]">
+
+               
+
+                <Carousel className="w-[100%]  mb-4">
+                  <div className="text-primary text-[0.8rem] w-full flex justify-between mb-4">
                     Fotos para a Arte
-                  </label>
+                    <Button className="px-2 py-1" type="button">
+                      <label htmlFor="input-image" className="cursor-pointer flex gap-2">
+                        <Plus className="text-white" size={20} />
+                        Adicionar Foto
+                      </label>
+                      <input
+                        id="input-image"
+                        placeholder="Descrição da foto"
+                        type="file"
+                        accept="image/png, image/jpg"
+                        className="hidden"
+                        onClick={(e: any) => (e.target.value = null)}
+                        onChange={(e: any) =>
+                          e.target.files.length > 0 &&
+                          setImages([
+                            ...images,
+                            {
+                              imageUrl: URL?.createObjectURL(e?.target?.files[0]),
+                              blob: e?.target?.files[0],
+                              description: "",
+                            },
+                          ])
+                        }
+                      />
+                    </Button>
+                  </div>
                   <CarouselContent>
                     {images?.map((image, index) => (
                       <CarouselItem key={index} className="basis-[80%]">
@@ -253,7 +285,7 @@ const FormRequest = () => {
                                   )
                                 }
                               />
-                              <img src={image.imageUrl} alt="previsualização" />
+                              <img src={image.imageUrl} alt="previsualização" className="w-[200px] h-[200px] object-contain" />
                               <input
                                 placeholder="Descrição da foto"
                                 value={image.description}
@@ -277,41 +309,6 @@ const FormRequest = () => {
                         </div>
                       </CarouselItem>
                     ))}
-                    <CarouselItem className="basis-[80%]">
-                      <div className="p-1">
-                        <Card className="mt-4">
-                          <CardContent className="flex aspect-square flex-col items-center justify-center p-6 relative">
-                            <label
-                              htmlFor="input-image"
-                              className="cursor-pointer"
-                            >
-                              <Plus className="text-grey_300" size={60} />
-                            </label>
-                            <input
-                              id="input-image"
-                              placeholder="Descrição da foto"
-                              type="file"
-                              accept="image/png, image/jpg"
-                              className="hidden"
-                              onClick={(e:any) => (e.target.value = null)}
-                              onChange={(e:any) =>
-                                e.target.files.length > 0 &&
-                                setImages([
-                                  ...images,
-                                  {
-                                    imageUrl: URL?.createObjectURL(
-                                      e?.target?.files[0]
-                                    ),
-                                    blob: e?.target?.files[0],
-                                    description: "",
-                                  },
-                                ])
-                              }
-                            />
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
                   </CarouselContent>
                 </Carousel>
               </form>

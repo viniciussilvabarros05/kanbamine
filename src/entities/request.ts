@@ -4,8 +4,15 @@ export type ImagesProps = {
   blob: File | null;
 };
 
+export enum  status {
+  toDo = 0,
+  playing = 1,
+  finished = 2,
+}
+  
+
+
 export type RequestProps = {
-  id?: string;
   phone: string;
   name: string;
   images: ImagesProps[];
@@ -13,9 +20,13 @@ export type RequestProps = {
   objective: string;
   theme: string;
   description: string;
-  status: 0|1|2;
+  status: status;
   urgency?: string;
 };
+
+export interface RequestPropsWithId extends RequestProps {
+  id: string;
+}
 
 export class Request {
   request: RequestProps;
