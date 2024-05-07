@@ -92,7 +92,7 @@ const FormRequest = () => {
 
   return (
     <div className="min-h-[100vh] w-full flex items-center justify-center">
-      <Card className="w-[60%] h-[80%]  m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
+      <Card className="w-[60%] m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
         <Image
           src="/logo.svg"
           width={137}
