@@ -1,11 +1,8 @@
-"use server"
-
 import { db } from "@/_firebase/config";
-import { addDoc, collection } from "firebase/firestore";
 
 export async function addUser() {
     try {
-      const docRef = await addDoc(collection(db, "users"), {
+      const docRef = await db.collection("users").add({
         first: "Ada",
         last: "Lovelace",
         born: 1815,
