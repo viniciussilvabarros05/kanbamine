@@ -4,9 +4,11 @@ import { Calendar, ClipboardListIcon, LayoutDashboard } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/providers/authContext";
 
 const SideNavigation = () => {
   const pathname = usePathname();
+  const {SignOut} = useAuth()
   let activeLink = (href: string) =>
     pathname === href
       ? "text-primary bg-background"
@@ -53,6 +55,7 @@ const SideNavigation = () => {
         
       </Link>
       <Button
+        onClick={SignOut}
         className={`bg-foreground text-border hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
       >
         <LayoutDashboard className="pr-[0.5rem]" size={28} />
