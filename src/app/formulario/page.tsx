@@ -28,8 +28,12 @@ import { SendRequest } from "@/_actions/request";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/_firebase/config";
 import { InputNumber } from "@/components/inputNumber";
+import { InputTime } from "@/components/inputTime";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 const FormRequest = () => {
+  const {toast} = useToast()
   const [images, setImages] = useState<
     { description: string; imageUrl: string; blob: File }[]
   >([]);
@@ -51,7 +55,7 @@ const FormRequest = () => {
       name: "Teste",
       phone: "98989898989898",
       date: "12-06-2024",
-      time: "Teste",
+      time: "19:30",
       objective: "Teste",
       theme: "Teste",
       description: "Teste",
@@ -71,6 +75,15 @@ const FormRequest = () => {
       await SendRequest({ ...values, images, date, status: 0 });
       setImages([]);
       setIsloading(false);
+      toast({
+        title: "Pedido enviado com sucesso",
+        description: "Seu pedido acabou de ser enviado para nossa equipe!",
+        action: (
+          <ToastAction altText="clique em fechar para sumir o aviso">
+            fechar
+          </ToastAction>
+        ),
+      });
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +103,7 @@ const FormRequest = () => {
 
   return (
     <div className="min-h-[100vh] w-full flex items-center justify-center">
-      <Card className="w-[60%] m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
+      <Card className="w-[60%] h-[80%] m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
         <Image
           src="/logo.svg"
           width={137}
@@ -170,7 +183,7 @@ const FormRequest = () => {
                           Horário
                         </FormLabel>
                         <FormControl>
-                          <Input
+                         <InputTime
                             {...field}
                             className="h-8 outline-none border border-primary rounded-sm px-2 py-[0.5rem] mb-2 w-full bg-white"
                           />
