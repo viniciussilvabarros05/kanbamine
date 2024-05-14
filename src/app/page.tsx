@@ -5,14 +5,18 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuth } from "@/providers/authContext";
+import { LoaderCircle } from "lucide-react";
 
 export default function Home() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { Authenticate} = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { Authenticate } = useAuth();
 
-  async function HandleAuthentication(){
-    await Authenticate(email, password)
+  async function HandleAuthentication() {
+    setIsLoading(true);
+    await Authenticate(email, password);
+    setIsLoading(false);
   }
 
   return (
@@ -31,22 +35,31 @@ export default function Home() {
             type="text"
             placeholder="Email"
             defaultValue=""
-            onChange={(e)=> setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="text-sm p-4 w-full border-primary bg-white border-[1px]  rounded-[4px] h-[40px] outline-none mb-4"
           ></input>
           <label className="text-primary font-medium text-sm">Senha</label>
           <input
             placeholder="Senha"
             defaultValue={""}
-            onChange={(e)=> setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             type="password"
             className="text-sm p-4 w-full border-primary bg-white border-[1px]  rounded-[4px] h-[40px] outline-none"
           ></input>
-          <Link href="/received-password" className="text-sm text-primary ml-auto py-4">Recuperar senha</Link>
+          <Link
+            href="/received-password"
+            className="text-sm text-primary ml-auto py-4"
+          >
+            Recuperar senha
+          </Link>
         </div>
-          <Button className="w-full mt-auto" onClick={HandleAuthentication}>
-            ENTRAR
-          </Button>
+        <Button className="w-full mt-auto" onClick={HandleAuthentication}>
+          {!isLoading ? (
+            "ENTRAR"
+          ) : (
+            <LoaderCircle size={20} className="animate-spin text-white" />
+          )}
+        </Button>
       </Card>
     </main>
   );
