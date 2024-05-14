@@ -22,7 +22,7 @@ export type RequestProps = {
   time: string;
   description: string;
   status: status;
-  urgency?: string;
+  event: string;
 };
 
 export interface RequestPropsWithId extends RequestProps {

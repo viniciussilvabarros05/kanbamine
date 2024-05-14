@@ -42,6 +42,9 @@ const FormRequest = () => {
     name: z.string().min(2, {
       message: "Informe seu nome",
     }),
+    event: z.string().min(2, {
+      message: "Informe o nome do evento",
+    }),
     phone: z.string().min(11, { message: "Número de celular incorreto" }),
     date: z.string().min(10, { message: "Obrigatório informar a data" }),
     time: z.string().min(5, { message: "Informe o horário" }),
@@ -53,6 +56,7 @@ const FormRequest = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "Teste",
+      event: "Teste",
       phone: "98989898989898",
       date: "12-06-2024",
       time: "19:30",
@@ -65,6 +69,7 @@ const FormRequest = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsloading(true);
     try {
+      const id = String(new Date().getTime())
       const dataString = values.date;
       const [dia, mes, ano] = dataString.split("-");
       const date = new Date(
@@ -72,7 +77,7 @@ const FormRequest = () => {
         Number(mes) - 1,
         Number(dia)
       ).toISOString();
-      await SendRequest({ ...values, images, date, status: 0 });
+      await SendRequest({ ...values, images, date, status: 0, id });
       setImages([]);
       setIsloading(false);
       toast({
@@ -102,7 +107,7 @@ const FormRequest = () => {
   }, []);
 
   return (
-    <div className="min-h-[100vh] w-full flex items-center justify-center">
+    <div className="min-h-[100vh] w-full flex items-center justify-center p-8  max-[600px]:p-0">
       <Card className="w-[60%] h-[80%] m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
         <Image
           src="/logo.svg"
@@ -138,7 +143,7 @@ const FormRequest = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
+                     <FormField
                     control={form.control}
                     name="phone"
                     render={({ field }) => (
@@ -156,6 +161,25 @@ const FormRequest = () => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="event"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[0.8rem] text-primary">
+                          Nome do Evento
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="h-8 outline-none border border-primary rounded-sm px-2 py-[0.5rem] mb-2 w-full bg-white"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[0.8rem]" />
+                      </FormItem>
+                    )}
+                  />
+               
                   <FormField
                     control={form.control}
                     name="date"

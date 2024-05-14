@@ -207,7 +207,7 @@ const ModelDialogContent = ({ request }: Props) => {
           <input
             className="border border-primary rounded-sm px-2 py-1 mb-2"
             readOnly
-            value={request.name}
+            value={request.event}
           />
 
           <label className="text-primary text-[0.8rem]">Data do Evento</label>

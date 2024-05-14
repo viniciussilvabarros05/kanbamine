@@ -123,6 +123,7 @@ const DashboardPage = () => {
                 <TableRow>
                   <TableHead className="w-[100px]">Nº</TableHead>
                   <TableHead>Nome</TableHead>
+                  <TableHead>Evento</TableHead>
                   <TableHead>Telefone</TableHead>
                   <TableHead className="text-left">Data do Evento</TableHead>
                   <TableHead className="text-center w-[100px]">
@@ -140,9 +141,12 @@ const DashboardPage = () => {
                       onClick={() => setCurrentRequestModel(request)}
                     >
                       <TableRow className={`animate-fadeIn`}>
-                        <TableCell className="font-medium">{index}</TableCell>
+                        <TableCell className="font-medium">{index +1 }</TableCell>
                         <TableCell className="text-left">
                           {request.name}
+                        </TableCell>
+                        <TableCell className="text-left">
+                          {request.theme}
                         </TableCell>
                         <TableCell className="text-left">
                           {request.phone}

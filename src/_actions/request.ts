@@ -1,10 +1,10 @@
 "use client";
 
-import { ImagesProps, RequestProps } from "@/entities/request";
-import { auth, db, storage } from "@/_firebase/config";
+import { RequestPropsWithId } from "@/entities/request";
+import { db, storage } from "@/_firebase/config";
 
-export async function SendRequest(request: RequestProps) {
-  let doc = String(new Date().getTime())
+export async function SendRequest(request: RequestPropsWithId) {
+  let doc = String(request.id)
   const uploadImages = async () => {
     let storageRef = storage.ref();
     let uploadPromises = [];
