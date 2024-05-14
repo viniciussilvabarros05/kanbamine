@@ -19,6 +19,7 @@ export type RequestProps = {
   date: string;
   objective: string;
   theme: string;
+  time: string;
   description: string;
   status: status;
   urgency?: string;
