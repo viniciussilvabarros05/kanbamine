@@ -2,13 +2,13 @@ import { RequestPropsWithId, status } from "@/entities/request";
 import { db } from "@/_firebase/config";
 
 interface Props{
-    request: RequestPropsWithId;
+    id: string;
     status: status;
 }
 
-export async function ChangeStatus({request, status}: Props){
+export async function ChangeStatus({id, status}: Props){
   
-    await db.collection("requests").doc(request.id).update({
+    await db.collection("requests").doc(id).update({
         status: Number(status)
     })
    

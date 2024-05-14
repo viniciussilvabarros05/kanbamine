@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Calendar, ClipboardListIcon, LayoutDashboard } from "lucide-react";
+import { Calendar, ClipboardListIcon, LayoutDashboard, LogOutIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -33,6 +33,18 @@ const SideNavigation = () => {
           <p>Pedidos</p>
         </Button>
       </Link>
+
+      <Link href="/home/tasks">
+        <Button
+          className={`${activeLink(
+            "/home/tasks"
+          )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
+        >
+          <ClipboardListIcon className="pr-[0.5rem]" size={28} />
+          <p>Tarefas</p>
+        </Button>
+      </Link>
+
       <Link href="/home/calendar">
         <Button
           className={`${activeLink(
@@ -43,22 +55,12 @@ const SideNavigation = () => {
           <p>Calendário</p>
         </Button>
       </Link>
-      <Link href="/home/tasks">
-        <Button
-          className={`${activeLink(
-            "/home/tasks"
-          )} hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
-        >
-          <ClipboardListIcon className="pr-[0.5rem]" size={28} />
-          <p>Tarefas</p>
-        </Button>
-        
-      </Link>
+     
       <Button
         onClick={SignOut}
         className={`bg-foreground text-border hover:text-primary hover:bg-background w-[90%] flex items-center justify-start`}
       >
-        <LayoutDashboard className="pr-[0.5rem]" size={28} />
+        <LogOutIcon className="pr-[0.5rem]" size={28} />
         <p>Logout</p>
       </Button>
     </div>

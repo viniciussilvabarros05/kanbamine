@@ -6,9 +6,9 @@ import { Draggable, DropResult, Droppable } from "react-beautiful-dnd";
 import { DndContext } from "@/providers/DndContext";
 import Header from "../_components/header";
 import { Card } from "@/components/ui/card";
-import OrangeLabel from "../_components/orangeLabel";
-import RedLabel from "../_components/redLabel";
-import GreenLabel from "../_components/greenLabel";
+import OrangeLabel from "@/components/orangeLabel";
+import RedLabel from "@/components/redLabel";
+import GreenLabel from "@/components/greenLabel";
 import { Button } from "@/components/ui/button";
 interface Cards {
   id: number;

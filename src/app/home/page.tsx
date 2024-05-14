@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/table";
 import ModelDialogContent from "./_components/modelDialogContent";
 import { useEffect, useState } from "react";
-import GreenLabel from "./_components/greenLabel";
+import GreenLabel from "@/components/greenLabel";
 import Header from "./_components/header";
-import OrangeLabel from "./_components/orangeLabel";
-import RedLabel from "./_components/redLabel";
+import OrangeLabel from "../../components/orangeLabel";
+import RedLabel from "../../components/redLabel";
 import { db } from "@/_firebase/config";
 import { RequestProps, RequestPropsWithId } from "@/entities/request";
 import { format } from "date-fns";
