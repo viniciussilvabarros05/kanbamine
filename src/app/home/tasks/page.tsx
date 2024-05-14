@@ -19,34 +19,26 @@ interface Cards {
   }[];
 }
 const DndExample = () => {
-  const [data, setData] = useState<Cards[] | []>([]);
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result;
-    if (!destination) return;
-    if (source.droppableId !== destination.droppableId) {
-      const newData = [...JSON.parse(JSON.stringify(data))]; //shallow copy concept
-      const oldDroppableIndex = newData.findIndex(
-        (x) => x.id == source.droppableId.split("droppable")[1]
-      );
-      const newDroppableIndex = newData.findIndex(
-        (x) => x.id == destination.droppableId.split("droppable")[1]
-      );
-      const [item] = newData[oldDroppableIndex].components.splice(
-        source.index,
-        1
-      );
-      newData[newDroppableIndex].components.splice(destination.index, 0, item);
-      setData([...newData]);
-    } else {
-      const newData = [...JSON.parse(JSON.stringify(data))]; //shallow copy concept
-      const droppableIndex = newData.findIndex(
-        (x) => x.id == source.droppableId.split("droppable")[1]
-      );
-      const [item] = newData[droppableIndex].components.splice(source.index, 1);
-      newData[droppableIndex].components.splice(destination.index, 0, item);
-      setData([...newData]);
-    }
-  };
+   const [data, setData] = useState<Cards[] | []>([])
+    const onDragEnd = (result: DropResult) => {
+        const { source, destination } = result;
+        if (!destination) return;
+        if (source.droppableId !== destination.droppableId) {
+            const newData = [...JSON.parse(JSON.stringify(data))];//shallow copy concept
+            const oldDroppableIndex = newData.findIndex(x => x.id == source.droppableId.split("droppable")[1]);
+            const newDroppableIndex = newData.findIndex(x => x.id == destination.droppableId.split("droppable")[1])
+            const [item] = newData[oldDroppableIndex].components.splice(source.index, 1);
+            newData[newDroppableIndex].components.splice(destination.index, 0, item);
+            setData([...newData]);
+        } else {
+            const newData = [...JSON.parse(JSON.stringify(data))];//shallow copy concept
+            const droppableIndex = newData.findIndex(x => x.id == source.droppableId.split("droppable")[1]);
+            const [item] = newData[droppableIndex].components.splice(source.index, 1);
+            newData[droppableIndex].components.splice(destination.index, 0, item);
+            setData([...newData]);
+        }
+    };
+
   useEffect(() => {
     setData(cardsData);
   }, []);

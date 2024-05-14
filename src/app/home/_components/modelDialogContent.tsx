@@ -40,12 +40,8 @@ const ModelDialogContent = ({ request }: Props) => {
   const [statusRequest, setStatusRequest] = useState<status>(request.status);
   const [loadingStatusChange, setLoadingStatusChange] = useState(false);
   const { toast } = useToast();
-  useEffect(() => {
-    setImages([]);
-    setStatusRequest(request.status);
-  }, [request]);
 
-  useEffect(() => {
+  function updateImageUrl(){
     let promises: any[] = [];
     if (request?.images[0]?.imageUrl?.includes("https")) {
       setImages(request.images);
@@ -75,6 +71,15 @@ const ModelDialogContent = ({ request }: Props) => {
           setImages(imagesUrl);
         });
     });
+  }
+
+  useEffect(() => {
+    setImages([]);
+    setStatusRequest(request.status);
+  }, [request]);
+
+  useEffect(() => {
+    updateImageUrl()
   }, [request]);
 
   function handleChangeStatus(status: status) {
@@ -216,7 +221,7 @@ const ModelDialogContent = ({ request }: Props) => {
           <input
             className="border border-primary rounded-sm px-2 py-1 mb-2"
             readOnly
-            value={""}
+            value={request.time}
           />
 
           <label className="text-primary text-[0.8rem]">Objetivo</label>

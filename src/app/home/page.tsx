@@ -44,9 +44,9 @@ const DashboardPage = () => {
     setStatus(value);
   }
 
-  function filterRequestForStatus() {
+  function filterRequestPerStatus() {
     setRequestsFilter(
-      requests.filter((item) => item.status === status).reverse()
+      requests.filter((item) => item.status === status)
     );
   }
 
@@ -61,7 +61,7 @@ const DashboardPage = () => {
   }
 
   useEffect(() => {
-    filterRequestForStatus();
+    filterRequestPerStatus();
   }, [requests, status]);
 
   useEffect(() => {
@@ -124,7 +124,7 @@ const DashboardPage = () => {
                   <TableHead className="w-[100px]">Nº</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Telefone</TableHead>
-                  <TableHead className="text-left">Data</TableHead>
+                  <TableHead className="text-left">Data do Evento</TableHead>
                   <TableHead className="text-center w-[100px]">
                     Status
                   </TableHead>
