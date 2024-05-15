@@ -48,7 +48,7 @@ const FormRequest = () => {
     phone: z.string().min(11, { message: "Número de celular incorreto" }),
     date: z.string().min(10, { message: "Obrigatório informar a data" }),
     time: z.string().min(5, { message: "Informe o horário" }),
-    objective: z.string().min(1, { message: "Informe o objetivo do evento" }),
+    local: z.string().min(1, { message: "Informe o local do evento" }),
     theme: z.string().min(1, { message: "Informe o tema do evento" }),
     description: z.string().min(1, { message: "Descreva brevemente o evento" }),
   });
@@ -60,7 +60,7 @@ const FormRequest = () => {
       phone: "98989898989898",
       date: "12-06-2024",
       time: "19:30",
-      objective: "Teste",
+      local: "Teste",
       theme: "Teste",
       description: "Teste",
     },
@@ -131,7 +131,7 @@ const FormRequest = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-[0.8rem] text-primary">
-                          Seu nome
+                          Seu nome e Departamento
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -218,11 +218,11 @@ const FormRequest = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="objective"
+                    name="local"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-[0.8rem] text-primary">
-                          Objetivo
+                          Local do Evento
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -258,7 +258,7 @@ const FormRequest = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-[0.8rem] text-primary">
-                          Descrição do evento
+                          Detalhes do evento
                         </FormLabel>
                         <FormControl>
                           <Input

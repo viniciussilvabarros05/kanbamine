@@ -17,7 +17,7 @@ export type RequestProps = {
   name: string;
   images: ImagesProps[];
   date: string;
-  objective: string;
+  local: string;
   theme: string;
   time: string;
   description: string;
