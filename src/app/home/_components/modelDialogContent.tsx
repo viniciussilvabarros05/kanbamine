@@ -138,7 +138,7 @@ const ModelDialogContent = ({ request }: Props) => {
             value={request.time}
           />
 
-          <label className="text-primary text-[0.8rem]">Objetivo</label>
+          <label className="text-primary text-[0.8rem]">Local</label>
           <input
             className="border border-primary rounded-sm px-2 py-1 mb-2"
             readOnly
