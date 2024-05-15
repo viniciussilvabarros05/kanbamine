@@ -10,6 +10,7 @@ import OrangeLabel from "@/components/orangeLabel";
 import RedLabel from "@/components/redLabel";
 import GreenLabel from "@/components/greenLabel";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 interface Cards {
   id: number;
   title: string;
@@ -47,8 +48,11 @@ const DndExample = () => {
     <DndContext onDragEnd={onDragEnd}>
       <Header title="Tarefas" />
       <Card className="flex gap-4 p-4 justify-start w-full min-h-[65vh] flex-col">
-        <Button variant="outline" className="bg-white text-accent w-[120px] h-[30px] rounded-sm">
-           + Criar Tarefa
+        <Button
+          variant="outline"
+          className="bg-white text-accent w-[120px] h-[30px] rounded-sm"
+        >
+          + Criar Tarefa
         </Button>
         <div className="w-full flex justify-around gap-4 h-[32px]">
           <RedLabel description="Para Fazer" />
@@ -83,13 +87,16 @@ const DndExample = () => {
                             {...provided.draggableProps}
                             ref={provided.innerRef}
                           >
-                            <p className="font-semibold capitalize text-gray-700">
-                              {component.name}
-
-                            </p>
+                            <div className="flex justify-between">
+                              <p className="font-semibold capitalize text-gray-700">
+                                {component.name}
+                              </p>
+                              <Avatar>
+                                <AvatarFallback className="text-white bg-primary">L</AvatarFallback>
+                              </Avatar>
+                            </div>
                             <p className="text-gray-400 text-[0.7rem] capitalize">
                               14/04/2024
-
                             </p>
                           </div>
                         )}
