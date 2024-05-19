@@ -16,24 +16,22 @@ import Header from "./_components/header";
 import OrangeLabel from "../../components/orangeLabel";
 import RedLabel from "../../components/redLabel";
 import { db } from "@/_firebase/config";
-import { RequestProps, RequestPropsWithId } from "@/entities/request";
+import { RequestProps, RequestPropsWithId, status } from "@/entities/request";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { LoaderCircle } from "lucide-react";
+import { useRequest } from "@/providers/requestContext";
+import { progress } from "@/entities/task";
 
 
 
 const DashboardPage = () => {
-  const [requests, setRequests] = useState<RequestPropsWithId[]>(
-    [] as RequestPropsWithId[]
+  const {requests, setRequests, isLoading, setIsLoading} = useRequest()
+  const [requestsFilter, setRequestsFilter] = useState<RequestProps[]>(
+    [] as RequestProps[]
   );
-  const [requestsFilter, setRequestsFilter] = useState<RequestPropsWithId[]>(
-    [] as RequestPropsWithId[]
-  );
-  const [status, setStatus] = useState(0);
-  const [currentRequestModel, setCurrentRequestModel] =
-    useState<RequestPropsWithId|null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(1);
+  const [currentRequestModel, setCurrentRequestModel] = useState<RequestProps|null>(null);
   const activeButtons = {
     red: "bg-red_100 ",
     orange: "bg-orange_100 ",
@@ -41,20 +39,23 @@ const DashboardPage = () => {
   };
 
   function handleFilterStatus(value: number) {
-    setStatus(value);
+    setProgress(value);
   }
 
   function filterRequestPerStatus() {
     setRequestsFilter(
-      requests.filter((item) => item.status === status)
+      requests.filter((item) => item.progress == progress)
     );
   }
 
-  function LabelStatus(status: 0 | 1 | 2) {
+  function LabelStatus(status: status) {
     let labels = {
-      "0": <RedLabel description="Para fazer"/>,
-      "1": <OrangeLabel description="Andamento" />,
-      "2": <GreenLabel description="Concluído" />,
+      "0": (
+        <RedLabel description="Analisando" className="cursor-pointer w-[120px] bg-grey_100 border-grey_300 text-grey_300" />
+      ),
+      "1": <RedLabel description="Urgente"/>,
+      "2": <OrangeLabel description="Pouco urgente" />,
+      "3": <GreenLabel description="Não urgente" />,
     };
 
     return labels[status];
@@ -62,47 +63,33 @@ const DashboardPage = () => {
 
   useEffect(() => {
     filterRequestPerStatus();
-  }, [requests, status]);
+  }, [requests, progress]);
 
-  useEffect(() => {
-    const unsubscribe = db.collection("requests").onSnapshot((querySnaphot) => {
-      let requests: RequestPropsWithId[] = [];
-      querySnaphot.forEach((doc) => {
-        requests.push({
-          ...doc.data(),
-          id: String(doc.id),
-        } as RequestPropsWithId);
-      });
-      setRequests(requests);
-      setIsLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
   return (
     <>
       <Header title="Pedidos" />
       <Card className="m-auto flex w-full h-[75vh] p-4 flex-col">
         <div className="w-full flex gap-2">
           <button
-            onClick={() => handleFilterStatus(0)}
+            onClick={() => handleFilterStatus(1)}
             className={`${
-              status == 0 && activeButtons.red
+              progress == 1 && activeButtons.red
             } " p-2 text-sm font-medium border-red_300 text-red_300 border rounded-sm transition-all duration-300 "`}
           >
             Para Fazer
           </button>
           <button
-            onClick={() => handleFilterStatus(1)}
+            onClick={() => handleFilterStatus(2)}
             className={`${
-              status == 1 && activeButtons.orange
+              progress == 2 && activeButtons.orange
             } " p-2 text-sm font-medium border-orange_300 text-orange_300 border rounded-sm transition-all duration-300 "`}
           >
             Andamento
           </button>
           <button
-            onClick={() => handleFilterStatus(2)}
+            onClick={() => handleFilterStatus(3)}
             className={`${
-              status == 2 && activeButtons.green
+              progress == 3 && activeButtons.green
             } " p-2 text-sm font-medium border-green_300 border text-green_300 rounded-sm transition-all duration-300 "`}
           >
             Concluído
@@ -126,8 +113,8 @@ const DashboardPage = () => {
                   <TableHead>Evento</TableHead>
                   <TableHead>Telefone</TableHead>
                   <TableHead className="text-left">Data do Evento</TableHead>
-                  <TableHead className="text-center w-[100px]">
-                    Status
+                  <TableHead className="text-center w-[150px]">
+                    Prioridade
                   </TableHead>
                 </TableRow>
               </TableHeader>

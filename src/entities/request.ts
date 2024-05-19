@@ -1,3 +1,5 @@
+import { progress } from "./task";
+
 export type ImagesProps = {
   imageUrl: string;
   description: string;
@@ -5,9 +7,10 @@ export type ImagesProps = {
 };
 
 export enum  status {
-  toDo = 0,
-  playing = 1,
-  finished = 2,
+  analyzing = 0,
+  urget = 1,
+  lessUrgent = 2,
+  notUrgent = 3,
 }
   
 
@@ -22,11 +25,13 @@ export type RequestProps = {
   time: string;
   description: string;
   status: status;
+  progress: progress;
   event: string;
+  id:string
 };
 
 export interface RequestPropsWithId extends RequestProps {
-  id: string;
+  
 }
 
 export class Request {

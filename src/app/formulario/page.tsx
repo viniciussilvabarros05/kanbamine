@@ -51,18 +51,20 @@ const FormRequest = () => {
     local: z.string().min(1, { message: "Informe o local do evento" }),
     theme: z.string().min(1, { message: "Informe o tema do evento" }),
     description: z.string().min(1, { message: "Descreva brevemente o evento" }),
+    progress: z.number().min(1),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "Teste",
       event: "Teste",
-      phone: "98989898989898",
+      phone: "(98)9 9898-9898",
       date: "12-06-2024",
       time: "19:30",
       local: "Teste",
       theme: "Teste",
       description: "Teste",
+      progress: 0,
     },
   });
 

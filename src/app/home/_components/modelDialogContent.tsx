@@ -5,10 +5,12 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +26,7 @@ import { ImagesProps, RequestPropsWithId, status } from "@/entities/request";
 import { useEffect, useState } from "react";
 
 import { downloadFilesAsZip, FileDownload } from "@/utils/fileDownload";
+import ModelCreateTasks from "../tasks/_components/modelCreateTasks";
 interface Props {
   request: RequestPropsWithId;
 }
@@ -64,21 +67,21 @@ const ModelDialogContent = ({ request }: Props) => {
   }
   function LabelStatus(status: status) {
     let labels = {
-      "0": (
-        <RedLabel
-          description="Para fazer"
-          className="w-[120px]"
-        />
-      ),
       "1": (
-        <OrangeLabel
-          description="Andamento"
+        <RedLabel
+          description="Urgente"
           className="w-[120px]"
         />
       ),
       "2": (
+        <OrangeLabel
+          description="Pouco Urgente"
+          className="w-[120px]"
+        />
+      ),
+      "3": (
         <GreenLabel
-          description="Concluído"
+          description="Não urgente"
           className="w-[120px]"
         />
       ),
@@ -106,6 +109,7 @@ const ModelDialogContent = ({ request }: Props) => {
           <DialogTitle className="text-gray-600 text-2xl flex gap-4">
             # Pedido - {request.name}
           </DialogTitle>
+        
         </div>
         <div className=" flex justify-between">
           <DialogDescription className="text-primary font-bold">
@@ -132,9 +136,7 @@ const ModelDialogContent = ({ request }: Props) => {
           />
 
           <label className="text-primary text-[0.8rem]">Horário</label>
-          <input
-            className="border border-primary rounded-sm px-2 py-1 mb-2"
-            readOnly
+          <input className="border border-primary rounded-sm px-2 py-1 mb-2" readOnly
             value={request.time}
           />
 
