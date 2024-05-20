@@ -31,7 +31,7 @@ export function DatePicker({ date, setDate }: Props) {
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
-            format(date, "PPP", { locale: ptBR })
+            format(new Date(date), "PPP", { locale: ptBR })
           ) : (
             <span className="text-xs">Data Final</span>
           )}

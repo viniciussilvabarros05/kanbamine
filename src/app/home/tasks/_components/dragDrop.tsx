@@ -38,7 +38,8 @@ export default function DragDrop({data}:Props) {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [currentContainerId, setCurrentContainerId] =
     useState<UniqueIdentifier>();
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [taskSelected, setTaskSelected] = useState<TaskProps|undefined>();
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
 
   function findValueOfItems(id: UniqueIdentifier | undefined, type: string) {
@@ -84,6 +85,7 @@ export default function DragDrop({data}:Props) {
     const { active } = event;
     const { id } = active;
     setActiveId(id);
+    setTaskSelected(findValueOfItems(id, "item")?.items?.find(item=> item.id == id))
   }
 
   const handleDragMove = (event: DragMoveEvent) => {
@@ -195,7 +197,7 @@ export default function DragDrop({data}:Props) {
     ).then(() => {});
     }
   };
-
+ 
   // This is the function that handles the sorting of the containers and items when the user is done dragging.
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -298,6 +300,8 @@ export default function DragDrop({data}:Props) {
   useEffect(()=>{
     setContainers(data)
   },[data])
+ 
+
    return (
 
     <div className="grid grid-cols-3 gap-6 min-h-[50vh]">
@@ -316,7 +320,6 @@ export default function DragDrop({data}:Props) {
                 key={container.id}
                 
                 onAddItem={() => {
-                setShowAddItemModal(true);
                 setCurrentContainerId(container.id);
                 }}
             >
@@ -327,7 +330,8 @@ export default function DragDrop({data}:Props) {
                         title={i.title}
                         id={i.id}
                         key={i.id}
-                        setOpenModel={setShowAddItemModal}
+                        task={i}
+                        setOpenModel={setOpenModal}
                     />
                     ))}
                 </div>
@@ -340,7 +344,8 @@ export default function DragDrop({data}:Props) {
             <Items
                 id={activeId}
                 title={findItemTitle(activeId)}
-                setOpenModel={setShowAddItemModal}
+                setOpenModel={setOpenModal}
+                task={{} as TaskProps}
             />
             )}
             {activeId && activeId.toString().includes("container") && (
@@ -350,15 +355,16 @@ export default function DragDrop({data}:Props) {
                     key={i.id}
                     title={i.title}
                     id={i.id}
-                    setOpenModel={setShowAddItemModal}
+                    task={i}
+                    setOpenModel={setOpenModal}
                 />
                 ))}
             </Container>
             )}
         </DragOverlay>
         </DndContext>
-        {showAddItemModal && (
-        <ModelViewTasks setOpenModel={setShowAddItemModal} />
+        {(taskSelected && openModal) && (
+        <ModelViewTasks setOpenModel={setOpenModal} task={taskSelected} />
         )}
     </div>
 

@@ -51,7 +51,6 @@ const FormRequest = () => {
     local: z.string().min(1, { message: "Informe o local do evento" }),
     theme: z.string().min(1, { message: "Informe o tema do evento" }),
     description: z.string().min(1, { message: "Descreva brevemente o evento" }),
-    progress: z.number().min(1),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +63,6 @@ const FormRequest = () => {
       local: "Teste",
       theme: "Teste",
       description: "Teste",
-      progress: 0,
     },
   });
 
@@ -79,7 +77,7 @@ const FormRequest = () => {
         Number(mes) - 1,
         Number(dia)
       ).toISOString();
-      await SendRequest({ ...values, images, date, status: 0, id });
+      await SendRequest({ ...values, images, date, status: 1, id, progress: 1 });
       setImages([]);
       setIsloading(false);
       toast({
@@ -95,12 +93,11 @@ const FormRequest = () => {
       console.log(error);
     }
   }
-
+  
   useEffect(() => {
-    auth
+     auth
       .signInAnonymously()
       .then((credentials) => {
-        console.log(credentials);
       })
       .catch((error) => {
         var errorCode = error.code;
@@ -111,10 +108,8 @@ const FormRequest = () => {
   return (
     <div className="min-h-[100vh] w-full flex items-center justify-center p-8  max-[600px]:p-0">
       <Card className="w-[60%] h-[80%] m-auto flex flex-col items-center p-4 max-[600px]:w-full max-[600px]:h-full relative overflow-hidden">
-        <Image
+        <img
           src="/logo.svg"
-          width={137}
-          height={21}
           alt="midiaboard"
           className="w-[40%] mb-4"
         />

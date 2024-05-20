@@ -7,7 +7,6 @@ export async function addUser() {
         last: "Lovelace",
         born: 1815,
       });
-      console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }

@@ -127,13 +127,13 @@ const DashboardPage = () => {
                       key={request.id}
                       onClick={() => setCurrentRequestModel(request)}
                     >
-                      <TableRow className={`animate-fadeIn`}>
+                      <TableRow className="animate-fadeIn cursor-pointer">
                         <TableCell className="font-medium">{index +1 }</TableCell>
                         <TableCell className="text-left">
                           {request.name}
                         </TableCell>
                         <TableCell className="text-left">
-                          {request.theme}
+                          {request.event}
                         </TableCell>
                         <TableCell className="text-left">
                           {request.phone}

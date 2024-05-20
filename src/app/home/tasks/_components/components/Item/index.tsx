@@ -4,14 +4,16 @@ import React, { Dispatch } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { TaskProps } from "@/entities/task";
 
 type ItemsType = {
   id: UniqueIdentifier;
   title: string;
   setOpenModel: Dispatch<boolean>
+  task: TaskProps;
 };
 
-const Items = ({ id, title,setOpenModel }: ItemsType) => {
+const Items = ({ id, title,setOpenModel, task }: ItemsType) => {
   const {
     attributes,
     listeners,

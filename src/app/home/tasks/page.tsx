@@ -74,8 +74,8 @@ const DndExample = () => {
   return (
     <div className="w-full h-full">
       <Header title="Tarefas" />
-      <Card className="flex gap-4 p-4 justify-start w-full min-h-[75vh] flex-col">
-        <Dialog>
+      <Card className="flex  p-4 justify-start w-full min-h-[75vh] flex-col">
+        <Dialog >
           <DialogTrigger asChild>
           <Button
             variant="outline"
@@ -84,9 +84,8 @@ const DndExample = () => {
             + Criar Tarefa
           </Button>
           </DialogTrigger>
-          <DialogContent className="w-[35%] h-[90%] text-gray-800">
-            <ModelCreateTasks/>
-          </DialogContent>
+          <ModelCreateTasks/>
+
         </Dialog>
        
         <div className="w-full flex justify-around gap-4 h-[80px] py-[24px] bg-white sticky top-[70px] z-[3]">

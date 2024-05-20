@@ -1,3 +1,6 @@
+import { RequestProps, status } from "./request";
+import { User } from "./user";
+
 export enum progress  {
     toDo = 1,
     progress = 2,
@@ -6,11 +9,12 @@ export enum progress  {
 
 export interface TaskProps{
     id: string;
-    requestId: string;
-    data: string;
+    request?: RequestProps;
+    date: string;
     title: string;
+    status:status;
     deadline: string;
-    attributed: string;
+    attributed: User[];
     description: string;
     progress: progress;
 
