@@ -139,6 +139,7 @@ const ModelDialogContent = ({ request }: Props) => {
   }
   useEffect(() => {
     setImages([]);
+    setStatusRequest(request.status)
   }, [request]);
 
   useEffect(() => {
