@@ -152,7 +152,7 @@ const ModelDialogContent = ({ request }: Props) => {
     locale: ptBR,
   });
   return (
-    <DialogContent className="bg-white text-black w-[900px]">
+    <DialogContent className="bg-white text-black w-[900px] z-[9999]">
       <DialogHeader className="text-gray-600">
         <div className="flex gap-4 items-center">
           <DialogTitle className="text-gray-600 text-2xl flex gap-4">
