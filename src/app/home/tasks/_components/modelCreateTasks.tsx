@@ -124,7 +124,7 @@ const ModelCreateTasks = () => {
         date: new Date().toISOString(),
         deadline: deadline.toISOString(),
         description,
-        request: selectedRequest,
+        request: selectedRequest || undefined,
         status: statusRequest,
         progress: 1,
         title,

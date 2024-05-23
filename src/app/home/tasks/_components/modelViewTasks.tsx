@@ -54,14 +54,10 @@ interface Props {
 const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   const closeRef = useRef<any>(null as any);
   const { requests } = useRequest();
-  const [filterRequests, setFilterRequests] = useState([] as RequestProps[]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [title, setTitle] = useState(task.title);
   const [statusRequest, setStatusRequest] = useState<status>(task.status);
   const [description, setDescription] = useState(task.description);
-  const [selectedRequest, setSelectedRequest] = useState<
-    RequestProps | undefined
-  >(task.request);
+  const [selectedRequest, setSelectedRequest] = useState<RequestProps | undefined>(task.request|| undefined);
   const [usersAttributeds, setUserAttributeds] = useState<UserProps[]>(
     task.attributed
   );
@@ -133,7 +129,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
         date: task.date,
         deadline: deadline.toISOString(),
         description,
-        request: selectedRequest,
+        request: selectedRequest || undefined,
         status: statusRequest,
         progress: task.progress,
         title,
@@ -218,18 +214,6 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
     setUserAttributeds([...usersAttributeds, newUser]);
   }
 
-  function FilterRequestPerEvent() {
-    const filteredItems = requests.filter((request) =>
-      request.event.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    if (filteredItems.length == 0) {
-      return setFilterRequests(requests);
-    }
-    if (searchTerm.length == 0) {
-      return setFilterRequests(requests);
-    }
-    setFilterRequests(filteredItems);
-  }
 
   function handleCloseModal(e: any) {
     if (e.target.className.includes("fixed")) {
@@ -249,12 +233,9 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
         });
       });
     setUsers(listUsers);
-    setFilterRequests(requests);
   }, []);
 
-  useEffect(() => {
-    FilterRequestPerEvent();
-  }, [searchTerm]);
+
 
   return (
     <div
@@ -358,20 +339,22 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
               </Popover>
             </div>
           </div>
-          <Dialog>
-            <div>
-              <DialogTrigger asChild>
-                <Button className="w-auto h-[25px] text-[0.7rem] mt-8 mb-4">
-                  {selectedRequest?.event || "Escolher Pedido"}
-                </Button>
-              </DialogTrigger>
-            </div>
-              {selectedRequest && (
-                <ModelDialogContent request={selectedRequest} />
-              )}
-          </Dialog>
+          {selectedRequest?.id && 
+            <Dialog>
+              <div>
+                <DialogTrigger asChild>
+                  <Button className="w-auto h-[25px] text-[0.7rem] mt-8">
+                    {selectedRequest?.event || "Escolher Pedido"}
+                  </Button>
+                </DialogTrigger>
+              </div>
+                {selectedRequest?.id && (
+                  <ModelDialogContent request={selectedRequest} />
+                )}
+            </Dialog>
+          }
           <textarea
-            className="w-full max-h-[220px] min-h-[220px] text-sm border-grey_100 border rounded-sm p-4 outline-none"
+            className="w-full max-h-[220px] min-h-[220px] text-sm border-grey_100 border rounded-sm p-4 outline-none  mt-4"
             value={description}
             onChange={(e: any) => setDescription(e.target.value)}
           ></textarea>
