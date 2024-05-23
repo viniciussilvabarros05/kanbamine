@@ -51,9 +51,7 @@ const ModelCreateTasks = () => {
   const [title, setTitle] = useState("");
   const [statusRequest, setStatusRequest] = useState<status>(3);
   const [description, setDescription] = useState("");
-  const [selectedRequest, setSelectedRequest] = useState<RequestProps>(
-    {} as RequestProps
-    );
+  const [requestId, setRequestId] = useState<string|null>(null);
   const [usersAttributeds, setUserAttributeds] = useState<UserProps[]>(
     [] as UserProps[]
     );
@@ -124,7 +122,7 @@ const ModelCreateTasks = () => {
         date: new Date().toISOString(),
         deadline: deadline.toISOString(),
         description,
-        request: selectedRequest || undefined,
+        requestId: requestId || null,
         status: statusRequest,
         progress: 1,
         title,
@@ -333,8 +331,8 @@ const ModelCreateTasks = () => {
         <Dialog>
           <div>
             <DialogTrigger asChild>
-              <Button className="w-auto h-[25px] text-[0.7rem] mt-8 mb-4">
-                {selectedRequest?.event || "Escolher Pedido"}
+              <Button className={`${(requestId? "bg-primary": "bg-secondary")} w-auto h-[25px] text-[0.7rem] mt-8 mb-4`}>
+                {requestId? "Pedido Selecionado" : "Escolher Pedido"}
               </Button>
             </DialogTrigger>
           </div>
@@ -363,9 +361,9 @@ const ModelCreateTasks = () => {
                     <TableRow
                       key={request.id}
                       className={`animate-fadeIn hover:bg-background cursor-pointer ${
-                        request.id == selectedRequest.id && "bg-background "
+                        (requestId && (request.id == requestId)) && "bg-background "
                       }`}
-                      onClick={() => setSelectedRequest(request)}
+                      onClick={() => setRequestId(request.id)}
                     >
                       <TableCell className="text-left">{request.name}</TableCell>
                       <TableCell className="text-left">{request.event}</TableCell>

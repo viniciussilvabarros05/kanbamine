@@ -34,13 +34,9 @@ export type DNDType = {
 };
 
 const DndExample = () => {
-  const [data, setData] = useState<Cards[] | []>([])
   const [containers, setContainers] = useState<DNDType[]>([]);
   const {requests} = useRequest()
-  useEffect(() => {
-    setData(cardsData);
-  }, []);
-
+ 
   useEffect(() => {
     const unsubscribe = db.collection("tasks").onSnapshot((querySnaphot) => {
       let tasks: TaskProps[] = [];

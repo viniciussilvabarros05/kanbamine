@@ -57,7 +57,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   const [title, setTitle] = useState(task.title);
   const [statusRequest, setStatusRequest] = useState<status>(task.status);
   const [description, setDescription] = useState(task.description);
-  const [selectedRequest, setSelectedRequest] = useState<RequestProps | undefined>(task.request|| undefined);
+  const [selectedRequest, setSelectedRequest] = useState<RequestProps | null>(null);
   const [usersAttributeds, setUserAttributeds] = useState<UserProps[]>(
     task.attributed
   );
@@ -129,7 +129,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
         date: task.date,
         deadline: deadline.toISOString(),
         description,
-        request: selectedRequest || undefined,
+        requestId: task.requestId || null,
         status: statusRequest,
         progress: task.progress,
         title,
@@ -236,7 +236,14 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   }, []);
 
 
-
+  useEffect(()=>{
+    if(task.requestId !=null){
+      const currentRequest= requests.find(request=> task.requestId && (request.id == task.requestId))
+      if(currentRequest){
+        setSelectedRequest(currentRequest)
+      }
+    }
+  },[task])
   return (
     <div
       className="animate-in fade-in-0 fixed z-[99] top-0 left-0 w-[100vw] h-[100vh] flex items-center justify-center bg-black bg-opacity-70 "
