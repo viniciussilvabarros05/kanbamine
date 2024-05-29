@@ -27,7 +27,7 @@ import Items from "./components/Item";
 import ModelViewTasks from "./modelViewTasks";
 import { db } from "@/_firebase/config";
 import { TaskProps } from "@/entities/task";
-import { UpdateTask } from "@/_actions/updateTask";
+import { UpdateTaskProgress } from "@/_actions/updateTaskProgress";
 import { DNDType } from "../page";
 
 interface Props{
@@ -130,7 +130,7 @@ export default function DragDrop({data}:Props) {
         );
 
         setContainers(newItems);
-        UpdateTask(
+        UpdateTaskProgress(
             String(active.id),
             containers[overContainerIndex].id.replace("container-", ""),
 
@@ -148,7 +148,7 @@ export default function DragDrop({data}:Props) {
           removeditem
         );
         setContainers(newItems);
-        UpdateTask(
+        UpdateTaskProgress(
             String(active.id),
             containers[overContainerIndex].id.replace("container-", "")
         ).then(() => {});
@@ -191,7 +191,7 @@ export default function DragDrop({data}:Props) {
       );
       newItems[overContainerIndex].items.push(removeditem);
       setContainers(newItems);
-      UpdateTask(
+      UpdateTaskProgress(
         String(active.id),
         String(over.id).replace("container-", "")
     ).then(() => {});
@@ -251,7 +251,7 @@ export default function DragDrop({data}:Props) {
           0,
           removeditem
         );
-        UpdateTask(
+        UpdateTaskProgress(
           String(active.id),
           containers[overContainerIndex].id.replace("container-", "")
         ).then(() => {});
@@ -290,7 +290,7 @@ export default function DragDrop({data}:Props) {
         1
       );
       newItems[overContainerIndex].items.push(removeditem);
-      UpdateTask(String(active.id), String(over.id).replace("container-", "")).then(() => {});
+      UpdateTaskProgress(String(active.id), String(over.id).replace("container-", "")).then(() => {});
       setContainers(newItems);
 
     }

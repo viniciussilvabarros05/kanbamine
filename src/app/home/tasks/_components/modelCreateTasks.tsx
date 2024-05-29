@@ -49,7 +49,7 @@ const ModelCreateTasks = () => {
   const { requests } = useRequest();
   const [searchTerm, setSearchTerm] = useState("");
   const [title, setTitle] = useState("");
-  const [statusRequest, setStatusRequest] = useState<status>(3);
+  const [statusRequest, setStatusRequest] = useState<status>(0);
   const [description, setDescription] = useState("");
   const [requestId, setRequestId] = useState<string|null>(null);
   const [usersAttributeds, setUserAttributeds] = useState<UserProps[]>(
@@ -221,6 +221,14 @@ const ModelCreateTasks = () => {
     setFilterRequests(filteredItems);
   }
 
+  function handleSelectRequest(request:RequestProps){
+    if(requestId == request.id){
+      setRequestId("")
+      return
+    }
+    setStatusRequest(request.status)
+    setRequestId(request.id)
+  }
   useEffect(() => {
     const listUsers: UserProps[] = [];
     db.collection("users")
@@ -291,10 +299,10 @@ const ModelCreateTasks = () => {
               </PopoverContent>
             </Popover>
           </div>
-          {/* <div className="flex flex-col gap-[0.5rem]">
+          <div className="flex flex-col gap-[0.5rem]">
             <label className="text-[0.7rem] text-black">Prioridade</label>
             <Popover>
-              <PopoverTrigger className="outline-none flex gap-2 items-center justify-center">
+              <PopoverTrigger className="outline-none flex gap-2 items-center justify-center" disabled={!!requestId}>
                 {loadingStatusChange && (
                   <LoaderCircle size={20} className="animate-spin text-primary" />
                 )}
@@ -326,7 +334,7 @@ const ModelCreateTasks = () => {
                 </Card>
               </PopoverContent>
             </Popover>
-          </div> */}
+          </div>
         </div>
         <Dialog>
           <div>
@@ -336,6 +344,7 @@ const ModelCreateTasks = () => {
               </Button>
             </DialogTrigger>
           </div>
+      
           <DialogContent className="h-[90vh] w-[50%] text-gray-800 flex flex-col gap-4">
             <Input
               placeholder="Pesquisar por evento"
@@ -358,12 +367,14 @@ const ModelCreateTasks = () => {
               <TableBody className="h-full">
                 {filterRequests?.map((request, index) => {
                   return (
+                    <DialogClose asChild>
+
                     <TableRow
                       key={request.id}
                       className={`animate-fadeIn hover:bg-background cursor-pointer ${
                         (requestId && (request.id == requestId)) && "bg-background "
                       }`}
-                      onClick={() => setRequestId(request.id)}
+                      onClick={() => handleSelectRequest(request)}
                     >
                       <TableCell className="text-left">{request.name}</TableCell>
                       <TableCell className="text-left">{request.event}</TableCell>
@@ -375,6 +386,7 @@ const ModelCreateTasks = () => {
                       </TableCell>
                       <TableCell className="text-left">{LabelStatus(request.status)}</TableCell>
                     </TableRow>
+                    </DialogClose>
                   );
                 })}
               </TableBody>

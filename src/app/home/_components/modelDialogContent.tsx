@@ -173,7 +173,7 @@ const ModelDialogContent = ({ request }: Props) => {
                 )}
                 {LabelStatus(statusRequest)}
               </PopoverTrigger>
-              <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px]">
+              <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px] z-[9999]">
                 <Card className="w-full shadow-lg rounded-sm cursor-pointer">
                   <div
                     className="flex gap-2 items-center hover:bg-gray-100 p-2"

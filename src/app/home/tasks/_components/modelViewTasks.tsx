@@ -1,6 +1,4 @@
 "use client";
-
-import { ChangeStatus } from "@/_actions/changeStatus";
 import OrangeLabel from "@/components/orangeLabel";
 import GreenLabel from "@/components/greenLabel";
 import RedLabel from "@/components/redLabel";
@@ -12,10 +10,7 @@ import {
 } from "@/components/ui/popover";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { LoaderCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -24,25 +19,13 @@ import { RequestProps, status } from "@/entities/request";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { CreateTask } from "@/_actions/createTasks";
+import { UpdateTask } from "@/_actions/updateTask";
 import { DatePicker } from "@/components/DatePicker";
 import { ListUsers } from "./listUsers";
 import { User as UserProps } from "@/entities/user";
 import { User } from "lucide-react";
 import { db } from "@/_firebase/config";
 import { useRequest } from "@/providers/requestContext";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Input } from "@/components/ui/input";
-import { v4 as uuidv4 } from "uuid";
 import { TaskProps } from "@/entities/task";
 import ModelDialogContent from "../../_components/modelDialogContent";
 
@@ -52,7 +35,6 @@ interface Props {
 }
 
 const ModelViewTasks = ({ setOpenModel, task }: Props) => {
-  const closeRef = useRef<any>(null as any);
   const { requests } = useRequest();
   const [title, setTitle] = useState(task.title);
   const [statusRequest, setStatusRequest] = useState<status>(task.status);
@@ -68,7 +50,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   const { toast } = useToast();
   const [users, setUsers] = useState<UserProps[]>([] as UserProps[]);
 
-  async function handleCreateTask() {
+  async function handleUpdateTask() {
     if (title == "") {
       toast({
         variant: "destructive",
@@ -123,7 +105,6 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
       return;
     }
     if (deadline) {
-      const id = `item-${uuidv4()}`;
       let Task = {
         attributed: usersAttributeds,
         date: task.date,
@@ -133,48 +114,11 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
         status: statusRequest,
         progress: task.progress,
         title,
-        id,
+        id: task.id,
       };
-      await CreateTask(Task);
-      closeRef.current.click();
+      await UpdateTask(Task);
+      setOpenModel(false);
     }
-  }
-
-  function handleChangeStatus(status: status) {
-    let descriptionStatus = {
-      0: "Analisando",
-      1: "Para fazer",
-      2: "Andamento",
-      3: "Concluído",
-    };
-    setLoadingStatusChange(true);
-    ChangeStatus({ id: "", status })
-      .then(() => {
-        setLoadingStatusChange(false);
-        setStatusRequest(status);
-        toast({
-          title: "Mudança de status",
-          description: "Status Mudado para: " + descriptionStatus[status],
-          action: (
-            <ToastAction altText="clique em fechar para sumir o aviso">
-              fechar
-            </ToastAction>
-          ),
-        });
-      })
-      .catch((error) => {
-        setLoadingStatusChange(false);
-        toast({
-          variant: "destructive",
-          title: "Erro na mudança de status",
-          description: "Não foi possível mudar o status da tarefa",
-          action: (
-            <ToastAction altText="clique em fechar para sumir o aviso">
-              fechar
-            </ToastAction>
-          ),
-        });
-      });
   }
 
   function LabelStatus(status: status) {
@@ -241,9 +185,10 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
       const currentRequest= requests.find(request=> task.requestId && (request.id == task.requestId))
       if(currentRequest){
         setSelectedRequest(currentRequest)
+        setStatusRequest(currentRequest.status)
       }
     }
-  },[task])
+  },[task, requests])
   return (
     <div
       className="animate-in fade-in-0 fixed z-[99] top-0 left-0 w-[100vw] h-[100vh] flex items-center justify-center bg-black bg-opacity-70 "
@@ -297,7 +242,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
                     )}
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-auto">
+                <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-auto z-[9999]">
                   <ListUsers users={users} action={addUsersForTask} />
                 </PopoverContent>
               </Popover>
@@ -305,7 +250,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
             <div className="flex flex-col gap-[0.5rem]">
               <label className="text-[0.7rem] text-black">Prioridade</label>
               <Popover>
-                <PopoverTrigger className="outline-none flex gap-2 items-center justify-center">
+                <PopoverTrigger className="outline-none flex gap-2 items-center justify-center" disabled={!!selectedRequest?.id}>
                   {loadingStatusChange && (
                     <LoaderCircle
                       size={20}
@@ -314,7 +259,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
                   )}
                   {LabelStatus(statusRequest)}
                 </PopoverTrigger>
-                <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px]">
+                <PopoverContent className="border-none bg-transparent shadow-none items-center flex  justify-center p-0 w-[150px] z-[9999]">
                   <Card className="w-full shadow-lg rounded-sm cursor-pointer">
                     <div
                       className="flex gap-2 items-center hover:bg-gray-100 p-2"
@@ -374,7 +319,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
             >
               Cancelar
             </Button>
-            <Button className="flex flex-1" onClick={handleCreateTask}>
+            <Button className="flex flex-1" onClick={handleUpdateTask}>
               Salvar
             </Button>
           </div>
