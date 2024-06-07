@@ -10,7 +10,11 @@ import { TaskProps } from '@/entities/task';
 const Celendar = () => {
     const [events, setEvents] = useState<TaskProps[]>([])
     const [isLoading, setIsLoading] = useState(false)
-
+    const activeButtons:any = {
+        1: "bg-red_100 ",
+        2: "bg-orange_100 ",
+        3: "bg-green_100 ",
+      };
     useEffect(() => {
         const unsubscribe = db.collection("tasks").onSnapshot((querySnaphot) => {
           let Events: TaskProps[] = [];
@@ -26,8 +30,8 @@ const Celendar = () => {
       }, []);
     
     function renderCell(date: Date) {
-        const day = date.getDate();
-        const currentDayList = events.filter((event)=> new Date(event.deadline).getDate() == day)
+       date.setHours(0, 0, 0, 0);
+        const currentDayList = events.filter((event)=> event.deadline === date.toISOString() )
         const displayList = currentDayList.filter((item, index) => index < 2);
 
         if (currentDayList.length) {
@@ -40,22 +44,22 @@ const Celendar = () => {
                   speaker={
                     <Popover>
                       {currentDayList.map((item, index) => (
-                        <p key={index} className="text-gray-800">
+                        <p key={index} className={`${activeButtons[item.status] as string} rounded-sm mb-[0.4rem] pl-[0.4rem] text-[0.8rem] truncate text-gray-800`}>
                           {item.title}
                         </p>
                       ))}
                     </Popover>
                   }
                 >
-                  <a className='text-primary'>{moreCount} more</a>
+                  <a className='text-primary'>{moreCount} mais</a>
                 </Whisper>
               </li>
             );
       
             return (
               <ul className="text-start">
-                {displayList.map((item, index) => (
-                  <li key={index} className="bg-background rounded-sm mb-[0.4rem] pl-[0.4rem] text-[0.8rem] truncate">
+                {(displayList as TaskProps[]).map((item, index) => (
+                  <li key={index} className={`${activeButtons[item.status] as string} rounded-sm mb-[0.4rem] pl-[0.4rem] text-[0.8rem] truncate`}>
                     <Badge /> {item.title}
                   </li>
                 ))}
