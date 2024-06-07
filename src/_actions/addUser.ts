@@ -1,13 +1,17 @@
 import { db } from "@/_firebase/config";
+import { v4 as uuidV4 } from "uuid";
 
-export async function addUser() {
-    try {
-      const docRef = await db.collection("users").add({
-        first: "Ada",
-        last: "Lovelace",
-        born: 1815,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+interface Props {
+  name: string;
+}
+export async function addUser({ name }: Props) {
+  let id = uuidV4();
+  try {
+    const docRef = await db.collection("users").add({
+      id,
+      name,
+    });
+  } catch (e) {
+    console.error("Error adding document: ", e);
   }
+}
