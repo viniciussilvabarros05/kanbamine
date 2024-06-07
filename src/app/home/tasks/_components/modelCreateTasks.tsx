@@ -367,10 +367,10 @@ const ModelCreateTasks = () => {
               <TableBody className="h-full">
                 {filterRequests?.map((request, index) => {
                   return (
-                    <DialogClose asChild>
+                    <DialogClose asChild  key={request.id}>
 
                     <TableRow
-                      key={request.id}
+                     
                       className={`animate-fadeIn hover:bg-background cursor-pointer ${
                         (requestId && (request.id == requestId)) && "bg-background "
                       }`}
