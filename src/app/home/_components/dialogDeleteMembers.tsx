@@ -12,8 +12,26 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { User } from "@/entities/user";
+import { ListUsers } from "../tasks/_components/listUsers";
+import { useState, useEffect } from "react";
+import { deleteUser } from "@/_actions/deleteUser";
+import { db } from "@/_firebase/config";
 
 const DialogDeleteMembers = () => {
+  const [users, setUsers] = useState<User[]>([] as User[]);
+
+  useEffect(() => {
+    const unsubscribe = db.collection("users").onSnapshot((snapshot) => {
+      const listUsers: User[] = [];
+      snapshot.forEach((doc) => {
+        listUsers.push(doc.data() as User);
+      });
+      setUsers(listUsers);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -24,27 +42,12 @@ const DialogDeleteMembers = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-gray-800">
-            Remova um membro
-          </DialogTitle>
+          <DialogTitle className="text-gray-800">Remova um membro</DialogTitle>
           <DialogDescription>
             Aqui você pode remover membros da equipe
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-2 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-left text-gray-800">
-              Nome
-            </Label>
-            <Input
-              id="name"
-              className="col-span-3 bg-transparent  text-gray-800"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit" variant="destructive">Remover</Button>
-        </DialogFooter>
+        <ListUsers users={users} action={deleteUser} />
       </DialogContent>
     </Dialog>
   );

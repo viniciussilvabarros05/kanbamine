@@ -12,8 +12,31 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import {addUser} from '@/_actions/addUser'
+import {useEffect, useState} from 'react'
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 const DialogAddMembers = () => {
+  const [name, setName] = useState('')
+  const {toast} = useToast()
+  
+  function handleAddUser(){
+
+      addUser({name}).then(()=>{
+        toast({
+          title: "Usuário adicionado com sucesso",
+          description: "Novo membro na equipe!",
+          action: (
+            <ToastAction altText="clique em fechar para sumir o aviso">
+              fechar
+            </ToastAction>
+          ),
+        });
+        setName('')
+      })
+  }
+
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -39,11 +62,12 @@ const DialogAddMembers = () => {
             <Input
               id="name"
               className="col-span-3 bg-transparent  text-gray-800"
+              onChange={(e:any)=> setName(e.target.value)}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Adicionar</Button>
+          <Button type="submit" onClick={handleAddUser}>Adicionar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
