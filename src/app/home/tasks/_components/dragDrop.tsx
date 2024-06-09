@@ -345,7 +345,7 @@ export default function DragDrop({data}:Props) {
                 id={activeId}
                 title={findItemTitle(activeId)}
                 setOpenModel={setOpenModal}
-                task={{} as TaskProps}
+                task={taskSelected}
             />
             )}
             {activeId && activeId.toString().includes("container") && (

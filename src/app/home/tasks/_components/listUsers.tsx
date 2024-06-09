@@ -1,14 +1,4 @@
 import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
-
-import { DialogClose } from "@/components/ui/dialog";
-import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -17,7 +7,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
 
 import { User as UserProps } from "@/entities/user";
 
@@ -37,13 +26,13 @@ export function ListUsers({users, action}:Props) {
         <CommandGroup heading="Membros">
           {users?.map((user) => {
             return (
-              <CommandItem key={user.id}>
+              <CommandItem key={user.id} className="p-0 px-1 h-[28px]">
                 <Avatar className="h-5 w-5 mr-2">
                   <AvatarFallback className=" bg-primary text-[0.6rem] text-white border-white border">
                     {user.name[0]}
                   </AvatarFallback>
                 </Avatar>
-                <span className="w-full h-full" onClick={()=> action && action(user)}>{user.name}</span>
+                <span className="w-full h-full m-auto flex items-center justify-start" onClick={()=> action && action(user)} >{user.name}</span>
               </CommandItem>
             );
           })}
