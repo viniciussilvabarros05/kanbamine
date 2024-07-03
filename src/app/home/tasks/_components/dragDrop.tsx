@@ -29,6 +29,7 @@ import { db } from "@/_firebase/config";
 import { TaskProps } from "@/entities/task";
 import { UpdateTaskProgress } from "@/_actions/updateTaskProgress";
 import { DNDType } from "../page";
+import { UpdateRequestProgress } from "@/_actions/updateRequestProgress";
 
 interface Props{
     data: DNDType[]
@@ -128,13 +129,21 @@ export default function DragDrop({data}:Props) {
           newItems[activeContainerIndex].items,
           activeitemIndex,overitemIndex
         );
-
         setContainers(newItems);
+        
         UpdateTaskProgress(
-            String(active.id),
-            containers[overContainerIndex].id.replace("container-", ""),
+          String(active.id),
+          containers[overContainerIndex].id.replace("container-", ""),
 
-        ).then(() => {});
+      ).then(() => {});
+        
+        let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
+        if(item){
+          UpdateRequestProgress(
+              String(item.requestId),
+              containers[overContainerIndex].id.replace("container-", ""),
+          ).then(() => {});
+        }
       } else {
         // In different containers
         let newItems = [...containers];
@@ -148,6 +157,13 @@ export default function DragDrop({data}:Props) {
           removeditem
         );
         setContainers(newItems);
+        let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
+        if(item){
+          UpdateRequestProgress(
+              String(item.requestId),
+              containers[overContainerIndex].id.replace("container-", ""),
+          ).then(() => {});
+        }
         UpdateTaskProgress(
             String(active.id),
             containers[overContainerIndex].id.replace("container-", "")
@@ -195,6 +211,13 @@ export default function DragDrop({data}:Props) {
         String(active.id),
         String(over.id).replace("container-", "")
     ).then(() => {});
+    let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
+    if(item){
+      UpdateRequestProgress(
+          String(item.requestId),
+          containers[overContainerIndex].id.replace("container-", ""),
+      ).then(() => {});
+    }
     }
   };
  
@@ -238,6 +261,7 @@ export default function DragDrop({data}:Props) {
           activeitemIndex,
           overitemIndex
         );
+        
         setContainers(newItems);
       } else {
         // In different containers
@@ -251,6 +275,13 @@ export default function DragDrop({data}:Props) {
           0,
           removeditem
         );
+        let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
+        if(item){
+          UpdateRequestProgress(
+              String(item.requestId),
+              containers[overContainerIndex].id.replace("container-", ""),
+          ).then(() => {});
+        }
         UpdateTaskProgress(
           String(active.id),
           containers[overContainerIndex].id.replace("container-", "")
@@ -290,6 +321,13 @@ export default function DragDrop({data}:Props) {
         1
       );
       newItems[overContainerIndex].items.push(removeditem);
+      let item = newItems[overContainerIndex].items.find(task=> task.id == active.id)
+      if(item){
+        UpdateRequestProgress(
+            String(item.requestId),
+            containers[overContainerIndex].id.replace("container-", ""),
+        ).then(() => {});
+      }
       UpdateTaskProgress(String(active.id), String(over.id).replace("container-", "")).then(() => {});
       setContainers(newItems);
 
