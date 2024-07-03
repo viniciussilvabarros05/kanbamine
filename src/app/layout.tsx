@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Mediaboard",
+  icons: {
+    icon: '/favicon.ico', 
+  },
   description:
     "Dashboard oficial do ministério de mídia da assembleia de Deus área 5 em São Luís-MA",
 };
