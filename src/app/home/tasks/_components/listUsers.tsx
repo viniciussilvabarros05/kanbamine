@@ -9,14 +9,17 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { User as UserProps } from "@/entities/user";
+import {  useMemo } from "react";
 
 interface Props {
   users: UserProps[];
-  action?: (user:UserProps)=>void;
+  action?: (user: UserProps) => void;
 }
-export function ListUsers({users, action}:Props) {
-  
+export function ListUsers({ users, action }: Props) {
 
+  const listUsers = useMemo(()=> {
+    return users
+  }, [users]);
 
   return (
     <Command className="rounded-lg border shadow-md">
@@ -24,7 +27,7 @@ export function ListUsers({users, action}:Props) {
       <CommandList>
         <CommandEmpty>Nenhum membro encontrado</CommandEmpty>
         <CommandGroup heading="Membros">
-          {users?.map((user) => {
+          {listUsers?.map((user) => {
             return (
               <CommandItem key={user.id} className="p-0 px-1 h-[28px]">
                 <Avatar className="h-5 w-5 mr-2">
@@ -32,7 +35,12 @@ export function ListUsers({users, action}:Props) {
                     {user.name[0]}
                   </AvatarFallback>
                 </Avatar>
-                <span className="w-full h-full m-auto flex items-center justify-start" onClick={()=> action && action(user)} >{user.name}</span>
+                <span
+                  className="w-full h-full m-auto flex items-center justify-start"
+                  onClick={() => action && action(user)}
+                >
+                  {user.name}
+                </span>
               </CommandItem>
             );
           })}

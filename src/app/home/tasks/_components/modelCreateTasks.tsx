@@ -230,15 +230,16 @@ const ModelCreateTasks = () => {
     setRequestId(request.id)
   }
   useEffect(() => {
-    const listUsers: UserProps[] = [];
-    db.collection("users")
-      .get()
-      .then((snapshot) => {
+    const unsubscribe = db.collection("users")
+    .onSnapshot((snapshot) => {
+       const listUsers: UserProps[] = [];
         snapshot.forEach((doc) => {
           listUsers.push(doc.data() as UserProps);
         });
+        setUsers(listUsers);
       });
-    setUsers(listUsers);
+
+    return () => unsubscribe()
   }, []);
 
   useEffect(() => {
