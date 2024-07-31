@@ -24,8 +24,17 @@ import { User } from "lucide-react";
 import { db } from "@/_firebase/config";
 import { useRequest } from "@/providers/requestContext";
 import { TaskProps } from "@/entities/task";
-import ModelDialogContent from "../../_components/modelDialogContent";
-
+import { deleteTasks } from "@/_actions/deleteTasks";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 interface Props {
   setOpenModel: Dispatch<boolean>;
   task: TaskProps;
@@ -36,7 +45,9 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   const [title, setTitle] = useState(task.title);
   const [statusRequest, setStatusRequest] = useState<status>(task.status);
   const [description, setDescription] = useState(task.description);
-  const [selectedRequest, setSelectedRequest] = useState<RequestProps | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<RequestProps | null>(
+    null
+  );
   const [usersAttributeds, setUserAttributeds] = useState<UserProps[]>(
     task.attributed
   );
@@ -155,13 +166,25 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
     setUserAttributeds([...usersAttributeds, newUser]);
   }
 
-
   function handleCloseModal(e: any) {
     if (e.target.className.includes("fixed")) {
       setOpenModel(false);
     } else {
       return;
     }
+  }
+  function handleDeleteTask() {
+    deleteTasks(task).then(() => {
+      toast({
+        title: "Task deletada com sucesso!",
+        action: (
+          <ToastAction altText="clique em fechar para sumir o aviso">
+            fechar
+          </ToastAction>
+        ),
+      });
+      setOpenModel(false);
+    });
   }
 
   useEffect(() => {
@@ -176,16 +199,17 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
     setUsers(listUsers);
   }, []);
 
-
-  useEffect(()=>{
-    if(task.requestId !=null){
-      const currentRequest= requests.find(request=> task.requestId && (request.id == task.requestId))
-      if(currentRequest){
-        setSelectedRequest(currentRequest)
-        setStatusRequest(currentRequest.status)
+  useEffect(() => {
+    if (task.requestId != null) {
+      const currentRequest = requests.find(
+        (request) => task.requestId && request.id == task.requestId
+      );
+      if (currentRequest) {
+        setSelectedRequest(currentRequest);
+        setStatusRequest(currentRequest.status);
       }
     }
-  },[task, requests])
+  }, [task, requests]);
   return (
     <div
       className="animate-in fade-in-0 fixed z-[99] top-0 left-0 w-[100vw] h-[100vh] flex items-center justify-center bg-black bg-opacity-70 "
@@ -247,7 +271,10 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
             <div className="flex flex-col gap-[0.5rem]">
               <label className="text-[0.7rem] text-black">Prioridade</label>
               <Popover>
-                <PopoverTrigger className="outline-none flex gap-2 items-center justify-center" disabled={!!selectedRequest?.id}>
+                <PopoverTrigger
+                  className="outline-none flex gap-2 items-center justify-center"
+                  disabled={!!selectedRequest?.id}
+                >
                   {loadingStatusChange && (
                     <LoaderCircle
                       size={20}
@@ -296,13 +323,33 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
           ></textarea>
 
           <div className="w-full flex gap-4 mt-auto">
-            <Button
-              className="flex flex-1"
-              variant="destructive"
-              onClick={() => setOpenModel(false)}
-            >
-              Cancelar
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="flex flex-1" variant="destructive">
+                  Excluir
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] z-[99999] ">
+                <DialogHeader>
+                  <DialogTitle className="text-gray-700">
+                    Deseja realmente excluir?
+                  </DialogTitle>
+                  <DialogDescription>
+                    A exclusão é permanente, não podendo ser recuperado os dados
+                    posteriormente
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose className="bg-grey_300">
+                    <Button>Cancelar</Button>
+                  </DialogClose>
+                  <Button variant="destructive" onClick={handleDeleteTask}>
+                    Excluir
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
             <Button className="flex flex-1" onClick={handleUpdateTask}>
               Salvar
             </Button>
