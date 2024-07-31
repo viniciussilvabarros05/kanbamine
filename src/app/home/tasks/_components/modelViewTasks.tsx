@@ -340,8 +340,10 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <DialogClose className="bg-grey_300">
-                    <Button>Cancelar</Button>
+                  <DialogClose asChild>
+                    <Button>
+                      Cancelar
+                    </Button>
                   </DialogClose>
                   <Button variant="destructive" onClick={handleDeleteTask}>
                     Excluir
