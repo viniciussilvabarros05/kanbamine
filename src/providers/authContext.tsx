@@ -37,8 +37,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         const {uid, email} = userCredentials
         Cookie.set('uid', userCredentials.uid)
         Cookie.set('email', userCredentials.email!)
-        setUser({email: email!, uid});
-        router.push("/home/tasks")
+        setUser({email, uid});
+        router.push("/home")
       }
       
     } catch (error) {
