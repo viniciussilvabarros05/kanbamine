@@ -342,7 +342,7 @@ export default function DragDrop({data}:Props) {
 
    return (
 
-    <div className="grid grid-cols-3 gap-6 min-h-[50vh]">
+    <div className="grid grid-cols-3 gap-3 min-h-[50vh]">
         <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -361,6 +361,7 @@ export default function DragDrop({data}:Props) {
                 setCurrentContainerId(container.id);
                 }}
             >
+
                 <SortableContext items={container.items.map((i) => i.id)}>
                 <div className="flex items-start flex-col gap-y-4">
                     {container.items.map((i) => (
@@ -379,6 +380,7 @@ export default function DragDrop({data}:Props) {
         </SortableContext>
         <DragOverlay adjustScale={false}>
             {activeId && activeId.toString().includes("item") && (
+              
             <Items
                 id={activeId}
                 title={findItemTitle(activeId)}

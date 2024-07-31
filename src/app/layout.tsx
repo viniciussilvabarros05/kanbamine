@@ -7,12 +7,12 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mediaboard",
+  title: "KanbaMine",
   icons: {
     icon: '/favicon.ico', 
   },
   description:
-    "Dashboard oficial do ministério de mídia da assembleia de Deus área 5 em São Luís-MA",
+    "Meu Kanban particular e intuitivo",
 };
 
 export default function RootLayout({

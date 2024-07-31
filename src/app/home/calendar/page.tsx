@@ -72,10 +72,10 @@ const Celendar = () => {
 
     }
     return ( 
-        <Card className="" > 
+        <> 
         <Header title="Calendário"/>
-            <Calendar bordered  cellClassName={(date)=>("h-[40px]")} renderCell={renderCell}/>
-        </Card>
+            <Calendar bordered className="mt-24 text-gray-800"  cellClassName={(date)=>("h-[40px]")} renderCell={renderCell}/>
+        </>
      );
 }
  

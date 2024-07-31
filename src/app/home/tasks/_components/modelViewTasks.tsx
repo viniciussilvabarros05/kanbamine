@@ -8,13 +8,10 @@ import {
   PopoverContent,
   Popover,
 } from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { LoaderCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect, useState, useRef, Dispatch } from "react";
+import { useEffect, useState, Dispatch } from "react";
 import { RequestProps, status } from "@/entities/request";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -291,20 +288,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
               </Popover>
             </div>
           </div>
-          {selectedRequest?.id && 
-            <Dialog>
-              <div>
-                <DialogTrigger asChild>
-                  <Button className="w-auto h-[25px] text-[0.7rem] mt-8">
-                    {selectedRequest?.event || "Escolher Pedido"}
-                  </Button>
-                </DialogTrigger>
-              </div>
-                {selectedRequest?.id && (
-                  <ModelDialogContent request={selectedRequest} />
-                )}
-            </Dialog>
-          }
+
           <textarea
             className="w-full max-h-[220px] min-h-[220px] text-sm border-grey_100 border rounded-sm p-4 outline-none  mt-4"
             value={description}

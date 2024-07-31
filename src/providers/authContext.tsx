@@ -1,6 +1,6 @@
 "use client";
 import { UserInfo } from "firebase/auth";
-import { createContext, Dispatch, ReactNode, useContext, useState } from "react";
+import { createContext, Dispatch, ReactNode, useContext, useEffect, useState } from "react";
 import Cookie from 'js-cookie'
 import { useRouter } from "next/navigation";
 import { LoginAuthenticate } from "@/_actions/login";
@@ -11,16 +11,19 @@ interface AuthContextProviderProps {
   children: ReactNode;
 }
 
+type User = {
+  email:string;
+  uid:string
+}
 interface AuthContextProps {
-  user: UserInfo|null | undefined;
-  setUser: Dispatch<UserInfo|null|undefined>;
+  user: User |null | undefined;
+  setUser: Dispatch<User|null|undefined>;
   Authenticate: (email: string, password: string) => Promise<void>;
   SignOut: () => Promise<void>;
 }
-
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<UserInfo| null|undefined>();
-    const router = useRouter()
+  const [user, setUser] = useState<User| null|undefined>();
+  const router = useRouter()
   async function Authenticate(email: string, password: string) {
     
 
@@ -29,10 +32,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         email,
         password
       );
+
       if(userCredentials){
+        const {uid, email} = userCredentials
         Cookie.set('uid', userCredentials.uid)
-        setUser(userCredentials);
-        router.push("/home")
+        Cookie.set('email', userCredentials.email!)
+        setUser({email: email!, uid});
+        router.push("/home/tasks")
       }
       
     } catch (error) {
@@ -41,7 +47,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }
   async function SignOut() {
     
-
     try {
       await auth.signOut()
       Cookie.remove('uid')
@@ -52,6 +57,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       console.log(error);
     }
   }
+  useEffect(()=>{
+    const email = Cookie.get('email')
+    const uid = Cookie.get('uid')
+    if(uid != null && email != null){
+      setUser({uid,email})
+    }
+  },[])
 
   return (
     <AuthContext.Provider value={{ user, setUser, Authenticate, SignOut }}>
@@ -62,5 +74,5 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
 
 export const useAuth = ()=>{
-    return useContext(AuthContext)
+  return useContext(AuthContext)
 }

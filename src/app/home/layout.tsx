@@ -12,7 +12,7 @@ export default function layout({
 
 
   return (
-    <div className="p-8 pl-[240px] pt-[100px] pb-8 flex min-h-[100vh] w-full items-center justify-center ">
+    <div className="px-8 pl-[220px] pb-8 flex min-h-[100vh] w-full items-center justify-center ">
       <RequestContextProvider>
         <CustomProvider locale={ptBR}>{children}</CustomProvider>
         <SideNavigation />

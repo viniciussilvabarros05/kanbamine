@@ -43,11 +43,11 @@ const DndExample = () => {
       const exemploContainer = [
         {
           id: `container-1`,
-          title: "toDo",
+          title: "Para Fazer",
           items: [] as TaskProps[],
         },
-        { id: `container-2`, title: "progress", items: [] },
-        { id: `container-3`, title: "finished", items: [] },
+        { id: `container-2`, title: "Andamento", items: [] },
+        { id: `container-3`, title: "Concluidas", items: [] },
       ];
 
       querySnaphot.forEach((doc) => {
@@ -70,27 +70,7 @@ const DndExample = () => {
   return (
     <div className="w-full h-full">
       <Header title="Tarefas" />
-      <Card className="flex  p-4 justify-start w-full min-h-[75vh] flex-col">
-        <Dialog >
-          <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="bg-white text-accent w-[120px] h-[30px] rounded-sm"
-          >
-            + Criar Tarefa
-          </Button>
-          </DialogTrigger>
-          <ModelCreateTasks/>
-
-        </Dialog>
-       
-        <div className="w-full flex justify-around gap-4 h-[80px] py-[24px] bg-white sticky top-[70px] z-[3]">
-          <RedLabel description="Para Fazer" />
-          <OrangeLabel description="Andamento" />
-          <GreenLabel description="Concluído" />
-        </div>
-       <DragDrop data={containers}/>
-      </Card>
+      <DragDrop data={containers}/>
     </div>
   );
 };
