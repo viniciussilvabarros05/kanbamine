@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 @layer base {
+
   :root {
     --background: 207 100% 90%;
     --foreground: 0 0% 100%;
@@ -47,7 +50,28 @@
     --green-100: 148 87 87%;
     --green-300: 148 72 44%;
 
+   
   }
+
+  .gradient-orange_300 {
+    background: linear-gradient(white, white) padding-box, linear-gradient(to bottom, hsl(var(--orange-300)),transparent) border-box;
+    border-radius: 50em;
+    border: 3px solid transparent;
+    text-decoration: none;
+  }  
+  .gradient-green_300 {
+    background: linear-gradient(white, white) padding-box, linear-gradient(to bottom, hsl(var(--green-300)),transparent) border-box;
+    border-radius: 50em;
+    border: 3px solid transparent;
+    text-decoration: none;
+  }  
+  .gradient-red_300 {
+    background: linear-gradient(white, white) padding-box, linear-gradient(to bottom, hsl(var(--red-300)),transparent) border-box;
+    border-radius: 50em;
+    border: 3px solid transparent;
+    text-decoration: none;
+  }  
+
 
   .dark {
     --background: 222.2 84% 4.9%;

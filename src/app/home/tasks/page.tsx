@@ -1,31 +1,12 @@
 "use client";
 
-import { cardsData } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { Draggable, DropResult, Droppable } from "react-beautiful-dnd";
-import { DndContext } from "@/providers/DndContext";
 import Header from "../_components/header";
-import { Card } from "@/components/ui/card";
-import OrangeLabel from "@/components/orangeLabel";
-import RedLabel from "@/components/redLabel";
-import GreenLabel from "@/components/greenLabel";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {Dialog, DialogTrigger, DialogContent, DialogHeader} from "@/components/ui/dialog"
-import ModelCreateTasks from "./_components/modelCreateTasks";
-import { Separator } from "@/components/ui/separator";
 import DragDrop from "./_components/dragDrop";
 import { db } from "@/_firebase/config";
 import { TaskProps } from "@/entities/task";
-import { useRequest } from "@/providers/requestContext";
-interface Cards {
-  id: number;
-  title: string;
-  components: {
-    id: number;
-    name: string;
-  }[];
-}
+import { useAuth } from "@/providers/authContext";
+
 
 export type DNDType = {
   id: string;
@@ -35,10 +16,9 @@ export type DNDType = {
 
 const DndExample = () => {
   const [containers, setContainers] = useState<DNDType[]>([]);
-  const {requests} = useRequest()
- 
+  const {user} = useAuth()
   useEffect(() => {
-    const unsubscribe = db.collection("tasks").onSnapshot((querySnaphot) => {
+    const unsubscribe = db.collection("tasks").where('userId', '==', user?.uid).onSnapshot((querySnaphot) => {
       let tasks: TaskProps[] = [];
       const exemploContainer = [
         {

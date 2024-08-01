@@ -17,20 +17,14 @@ import { ListUsers } from "../tasks/_components/listUsers";
 import { useState, useEffect } from "react";
 import { deleteUser } from "@/_actions/deleteUser";
 import { db } from "@/_firebase/config";
+import { useUser } from "@/providers/userContext";
 
 const DialogDeleteMembers = () => {
   const [users, setUsers] = useState<User[]>([] as User[]);
-
+  const {usersMembers} = useUser()
   useEffect(() => {
-    const unsubscribe = db.collection("users").onSnapshot((snapshot) => {
-      const listUsers: User[] = [];
-      snapshot.forEach((doc) => {
-        listUsers.push(doc.data() as User);
-      });
-      setUsers(listUsers);
-    });
-    return () => unsubscribe();
-  }, []);
+    setUsers(usersMembers);
+  }, [usersMembers]);
 
   return (
     <Dialog>

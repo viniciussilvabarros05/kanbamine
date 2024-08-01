@@ -12,17 +12,20 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {addUser} from '@/_actions/addUser'
-import {useEffect, useState} from 'react'
+import { addUser } from "@/_actions/addUser";
+import {  useState } from "react";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/providers/authContext";
 const DialogAddMembers = () => {
-  const [name, setName] = useState('')
-  const {toast} = useToast()
-  
-  function handleAddUser(){
+  const [name, setName] = useState("");
+  const { user } = useAuth();
+  const { toast } = useToast();
 
-      addUser({name}).then(()=>{
+  function handleAddUser() {
+    if (user) {
+      const { uid } = user;
+      addUser({ name, userId:uid }).then(() => {
         toast({
           title: "Usuário adicionado com sucesso",
           description: "Novo membro na equipe!",
@@ -32,10 +35,10 @@ const DialogAddMembers = () => {
             </ToastAction>
           ),
         });
-        setName('')
-      })
+        setName("");
+      });
+    }
   }
-
 
   return (
     <Dialog>
@@ -62,12 +65,14 @@ const DialogAddMembers = () => {
             <Input
               id="name"
               className="col-span-3 bg-transparent  text-gray-800"
-              onChange={(e:any)=> setName(e.target.value)}
+              onChange={(e: any) => setName(e.target.value)}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleAddUser}>Adicionar</Button>
+          <Button type="submit" onClick={handleAddUser}>
+            Adicionar
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

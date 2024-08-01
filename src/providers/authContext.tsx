@@ -5,6 +5,7 @@ import Cookie from 'js-cookie'
 import { useRouter } from "next/navigation";
 import { LoginAuthenticate } from "@/_actions/login";
 import { auth } from "@/_firebase/config";
+import { SigninAuthentication } from "@/_actions/signin";
 export const AuthContext = createContext({} as AuthContextProps);
 
 interface AuthContextProviderProps {
@@ -19,10 +20,14 @@ interface AuthContextProps {
   user: User |null | undefined;
   setUser: Dispatch<User|null|undefined>;
   Authenticate: (email: string, password: string) => Promise<void>;
+  SignIn: (email: string, password: string) => Promise<void>;
   SignOut: () => Promise<void>;
 }
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<User| null|undefined>();
+  const email = Cookie.get('email')
+  const uid = Cookie.get('uid')
+  const userCredentials = uid && email ? {email: email, uid: uid}: null
+  const [user, setUser] = useState<User| null|undefined>(userCredentials);
   const router = useRouter()
   async function Authenticate(email: string, password: string) {
     
@@ -38,7 +43,28 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         Cookie.set('uid', userCredentials.uid)
         Cookie.set('email', userCredentials.email!)
         setUser({email: email!, uid});
-        router.push("/home")
+        router.push("/home/tasks")
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function SignIn(email: string, password: string) {
+    
+
+    try {
+      const userCredentials = await SigninAuthentication(
+        email,
+        password
+      );
+
+      if(userCredentials){
+        const {uid, email} = userCredentials
+        Cookie.set('uid', userCredentials.uid)
+        Cookie.set('email', userCredentials.email!)
+        setUser({email: email!, uid});
+        router.push("/home/tasks")
       }
       
     } catch (error) {
@@ -60,13 +86,14 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   useEffect(()=>{
     const email = Cookie.get('email')
     const uid = Cookie.get('uid')
+    console.log(email,uid)
     if(uid != null && email != null){
       setUser({uid,email})
     }
   },[])
 
   return (
-    <AuthContext.Provider value={{ user, setUser, Authenticate, SignOut }}>
+    <AuthContext.Provider value={{ user, setUser, Authenticate, SignOut,SignIn }}>
       {children}
     </AuthContext.Provider>
   );

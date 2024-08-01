@@ -7,15 +7,15 @@ import { useAuth } from "@/providers/authContext";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
+export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { Authenticate } = useAuth();
+  const { SignIn } = useAuth();
 
-  async function HandleAuthentication() {
+  async function HandleCreateUserWithEmailAndPassword() {
     setIsLoading(true);
-    await Authenticate(email, password);
+    await SignIn(email, password);
     setIsLoading(false);
   }
 
@@ -48,11 +48,11 @@ export default function Home() {
             type="password"
             className="p-6 w-[90%]  border-primary bg-white border-[1px] text-lg rounded-[10px] h-[40px] outline-none placeholder:text-primary"
           ></input>
-          <Link href="/signin" className="text-primary text-xs mt-4">Não possui conta? Crie aqui</Link>
+           <Link href="/" className="text-primary text-xs mt-4">Já possui conta? Clique aqui</Link>
         </div>
-        <Button className="w-[90%] mt-10" onClick={HandleAuthentication}>
+        <Button className="w-[90%] mt-10" onClick={HandleCreateUserWithEmailAndPassword}>
           {!isLoading ? (
-            "ENTRAR"
+            "CRIAR CONTA"
           ) : (
             <LoaderCircle size={20} className="animate-spin text-white" />
           )}

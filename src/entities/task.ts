@@ -9,7 +9,7 @@ export enum progress  {
 
 export interface TaskProps{
     id: string;
-    requestId: string|null;
+    userId: string;
     date: string;
     title: string;
     status:status;

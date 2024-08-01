@@ -11,16 +11,14 @@ import {
   Popover,
 } from "@/components/ui/popover";
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 import { LoaderCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState, useRef } from "react";
-import { RequestProps, status } from "@/entities/request";
+import { status } from "@/entities/request";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -29,29 +27,15 @@ import { DatePicker } from "@/components/DatePicker";
 import { ListUsers } from "./listUsers";
 import { User as UserProps } from "@/entities/user";
 import { User } from "lucide-react";
-import { db } from "@/_firebase/config";
-import { useRequest } from "@/providers/requestContext";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Input } from "@/components/ui/input";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "@/providers/authContext";
+import { useUser } from "@/providers/userContext";
 
 const ModelCreateTasks = () => {
   const closeRef = useRef<any>(null as any);
-  const { requests } = useRequest();
-  const [searchTerm, setSearchTerm] = useState("");
   const [title, setTitle] = useState("");
   const [statusRequest, setStatusRequest] = useState<status>(0);
   const [description, setDescription] = useState("");
-  const [requestId, setRequestId] = useState<string | null>(null);
   const [usersAttributeds, setUserAttributeds] = useState<UserProps[]>(
     [] as UserProps[]
   );
@@ -59,9 +43,11 @@ const ModelCreateTasks = () => {
   const [deadline, setDeadline] = useState<Date | undefined>();
   const { toast } = useToast();
   const [users, setUsers] = useState<UserProps[]>([] as UserProps[]);
-  const [filterRequests, setFilterRequests] = useState(requests);
-
+  const {user} = useAuth()
+  const {usersMembers} = useUser()
+  
   async function handleCreateTask() {
+  
     if (title == "") {
       toast({
         variant: "destructive",
@@ -122,8 +108,8 @@ const ModelCreateTasks = () => {
         date: new Date().toISOString(),
         deadline: deadline.toISOString(),
         description,
-        requestId: requestId || null,
         status: statusRequest,
+        userId: user?.uid!,
         progress: 1,
         title,
         id,
@@ -133,42 +119,6 @@ const ModelCreateTasks = () => {
     }
   }
 
-  function handleChangeStatus(status: status) {
-    let descriptionStatus = {
-      0: "Analisando",
-      1: "Para fazer",
-      2: "Andamento",
-      3: "Concluído",
-    };
-    setLoadingStatusChange(true);
-    ChangeStatus({ id: "", status })
-      .then(() => {
-        setLoadingStatusChange(false);
-        setStatusRequest(status);
-        toast({
-          title: "Mudança de status",
-          description: "Status Mudado para: " + descriptionStatus[status],
-          action: (
-            <ToastAction altText="clique em fechar para sumir o aviso">
-              fechar
-            </ToastAction>
-          ),
-        });
-      })
-      .catch((error) => {
-        setLoadingStatusChange(false);
-        toast({
-          variant: "destructive",
-          title: "Erro na mudança de status",
-          description: "Não foi possível mudar o status da tarefa",
-          action: (
-            <ToastAction altText="clique em fechar para sumir o aviso">
-              fechar
-            </ToastAction>
-          ),
-        });
-      });
-  }
 
   function LabelStatus(status: status) {
     let labels = {
@@ -207,42 +157,10 @@ const ModelCreateTasks = () => {
     setUserAttributeds([...usersAttributeds, newUser]);
   }
 
-  function FilterRequestPerEvent() {
-    const filteredItems = requests.filter((request) =>
-      request.event.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    if (filteredItems.length == 0) {
-      return setFilterRequests(requests);
-    }
-    if (searchTerm == "") {
-      return setFilterRequests(requests);
-    }
-    setFilterRequests(filteredItems);
-  }
-
-  function handleSelectRequest(request: RequestProps) {
-    if (requestId == request.id) {
-      setRequestId("");
-      return;
-    }
-    setStatusRequest(request.status);
-    setRequestId(request.id);
-  }
-  useEffect(() => {
-    const unsubscribe = db.collection("users").onSnapshot((snapshot) => {
-      const listUsers: UserProps[] = [];
-      snapshot.forEach((doc) => {
-        listUsers.push(doc.data() as UserProps);
-      });
-      setUsers(listUsers);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
-    FilterRequestPerEvent();
-  }, [searchTerm]);
+    setUsers(usersMembers)
+  }, [usersMembers]);
 
   return (
     <DialogContent className="w-[35%] h-[90%] text-gray-800">
@@ -304,7 +222,7 @@ const ModelCreateTasks = () => {
               <Popover>
                 <PopoverTrigger
                   className="outline-none flex gap-2 items-center justify-center"
-                  disabled={!!requestId}
+                
                 >
                   {loadingStatusChange && (
                     <LoaderCircle

@@ -22,7 +22,6 @@ import { ListUsers } from "./listUsers";
 import { User as UserProps } from "@/entities/user";
 import { User } from "lucide-react";
 import { db } from "@/_firebase/config";
-import { useRequest } from "@/providers/requestContext";
 import { TaskProps } from "@/entities/task";
 import { deleteTasks } from "@/_actions/deleteTasks";
 import {
@@ -35,13 +34,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUser } from "@/providers/userContext";
 interface Props {
   setOpenModel: Dispatch<boolean>;
   task: TaskProps;
 }
 
 const ModelViewTasks = ({ setOpenModel, task }: Props) => {
-  const { requests } = useRequest();
   const [title, setTitle] = useState(task.title);
   const [statusRequest, setStatusRequest] = useState<status>(task.status);
   const [description, setDescription] = useState(task.description);
@@ -57,7 +56,7 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   );
   const { toast } = useToast();
   const [users, setUsers] = useState<UserProps[]>([] as UserProps[]);
-
+  const{usersMembers} = useUser()
   async function handleUpdateTask() {
     if (title == "") {
       toast({
@@ -118,10 +117,10 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
         date: task.date,
         deadline: deadline.toISOString(),
         description,
-        requestId: task.requestId || null,
         status: statusRequest,
         progress: task.progress,
         title,
+        userId: task.userId,
         id: task.id,
       };
       await UpdateTask(Task);
@@ -188,28 +187,9 @@ const ModelViewTasks = ({ setOpenModel, task }: Props) => {
   }
 
   useEffect(() => {
-    const listUsers: UserProps[] = [];
-    db.collection("users")
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          listUsers.push(doc.data() as UserProps);
-        });
-      });
-    setUsers(listUsers);
-  }, []);
+    setUsers(usersMembers);
+  }, [usersMembers]);
 
-  useEffect(() => {
-    if (task.requestId != null) {
-      const currentRequest = requests.find(
-        (request) => task.requestId && request.id == task.requestId
-      );
-      if (currentRequest) {
-        setSelectedRequest(currentRequest);
-        setStatusRequest(currentRequest.status);
-      }
-    }
-  }, [task, requests]);
   return (
     <div
       className="animate-in fade-in-0 fixed z-[99] top-0 left-0 w-[100vw] h-[100vh] flex items-center justify-center bg-black bg-opacity-70 "

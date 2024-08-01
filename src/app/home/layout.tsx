@@ -2,7 +2,7 @@ import "rsuite/dist/rsuite-no-reset.min.css";
 import ptBR from "rsuite/locales/pt_BR";
 import { CustomProvider } from "rsuite";
 import SideNavigation from "@/components/sideNavigation";
-import { RequestContextProvider } from "@/providers/requestContext";
+import { UserContextProvider } from "@/providers/userContext";
 
 export default function layout({
   children,
@@ -13,10 +13,10 @@ export default function layout({
 
   return (
     <div className="px-8 pl-[220px] pb-8 flex min-h-[100vh] w-full items-center justify-center ">
-      <RequestContextProvider>
-        <CustomProvider locale={ptBR}>{children}</CustomProvider>
-        <SideNavigation />
-      </RequestContextProvider>
+        <UserContextProvider>   
+          <CustomProvider locale={ptBR}>{children}</CustomProvider>
+          <SideNavigation />
+        </UserContextProvider>
     </div>
   );
 }

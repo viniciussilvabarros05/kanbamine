@@ -32,6 +32,9 @@ const Container = ({
     Concluidas: "green_300",
     default: "zinc-400",
   };
+  const backgroundColor = `bg-${variantsColorsContainer[title]}`
+  const textColor = `text-${variantsColorsContainer[title]}`
+  const borderColor = `gradient-${variantsColorsContainer[title]}`
   return (
     <div
       {...attributes}
@@ -41,21 +44,20 @@ const Container = ({
         transform: CSS.Translate.toString(transform),
       }}
       className={clsx(
-        "w-full h-full p-4 bg-[#FDFDFD] rounded-xl flex flex-col gap-y-4",
-        isDragging && "opacity-50",
-        `border-${variantsColorsContainer[title]} border-2`
+        "w-full h-full p-4 bg-[#FDFDFD] rounded-xl flex flex-col gap-y-4 border-2",
+        isDragging && "opacity-50", borderColor
       )}
     >
       <div className="flex gap-2 items-center">
-        <div className={`size-2 rounded-full bg-${variantsColorsContainer[title]}`}>
+        <div className={`size-2 rounded-full ${backgroundColor}`}>
 
         </div>
-        <h2 className={`text-${variantsColorsContainer[title]} font-medium`}>
+        <h2 className={`${textColor} font-medium`}>
           {title}
         </h2>
 
       </div>
-      <Separator className={`bg-${variantsColorsContainer[title]}`}/>
+      <Separator className={`${backgroundColor}`}/>
       {children}
     </div>
   );
