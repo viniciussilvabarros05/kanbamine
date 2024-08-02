@@ -1,14 +1,15 @@
 "use client"
-import { Card } from '@/components/ui/card';
+
 import { Badge, Calendar, Popover, Whisper } from 'rsuite';
 import Header from '../_components/header';
-import { ptBR } from "date-fns/locale";
 import {useEffect, useState} from 'react'
 import { db } from '@/_firebase/config';
 import { TaskProps } from '@/entities/task';
+import { useAuth } from '@/providers/authContext';
 
 const Celendar = () => {
     const [events, setEvents] = useState<TaskProps[]>([])
+    const {user} = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const activeButtons:any = {
         1: "bg-red_100 ",
@@ -16,7 +17,7 @@ const Celendar = () => {
         3: "bg-green_100 ",
       };
     useEffect(() => {
-        const unsubscribe = db.collection("tasks").onSnapshot((querySnaphot) => {
+        const unsubscribe = db.collection("tasks").where("userId", '==', user?.uid!).onSnapshot((querySnaphot) => {
           let Events: TaskProps[] = [];
           querySnaphot.forEach((doc) => {
             Events.push({

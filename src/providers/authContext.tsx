@@ -1,5 +1,4 @@
 "use client";
-import { UserInfo } from "firebase/auth";
 import { createContext, Dispatch, ReactNode, useContext, useEffect, useState } from "react";
 import Cookie from 'js-cookie'
 import { useRouter } from "next/navigation";
@@ -24,10 +23,8 @@ interface AuthContextProps {
   SignOut: () => Promise<void>;
 }
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const email = Cookie.get('email')
-  const uid = Cookie.get('uid')
-  const userCredentials = uid && email ? {email: email, uid: uid}: null
-  const [user, setUser] = useState<User| null|undefined>(userCredentials);
+
+  const [user, setUser] = useState<User| null|undefined>();
   const router = useRouter()
   async function Authenticate(email: string, password: string) {
     
@@ -76,6 +73,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       await auth.signOut()
       Cookie.remove('uid')
+      Cookie.remove('email')
       setUser(null);
       router.push("/")
             
@@ -86,7 +84,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   useEffect(()=>{
     const email = Cookie.get('email')
     const uid = Cookie.get('uid')
-    console.log(email,uid)
+
     if(uid != null && email != null){
       setUser({uid,email})
     }

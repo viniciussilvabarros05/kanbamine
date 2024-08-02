@@ -29,20 +29,22 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
   );
   const { user } = useAuth();
   useEffect(() => {
-    const { uid } = user!;
-    const unsubscribe = db
-      .collection("users")
-      .where("userId", "==", uid)
-      .onSnapshot((snapshot) => {
-        const listUsers: UserProps[] = [];
-        snapshot.forEach((doc) => {
-          listUsers.push(doc.data() as UserProps);
+    if (user) {
+      const { uid } = user!;
+      const unsubscribe = db
+        .collection("users")
+        .where("userId", "==", uid)
+        .onSnapshot((snapshot) => {
+          const listUsers: UserProps[] = [];
+          snapshot.forEach((doc) => {
+            listUsers.push(doc.data() as UserProps);
+          });
+          setUsersMembers(listUsers);
         });
-        setUsersMembers(listUsers);
-      });
 
-    return () => unsubscribe();
-  }, []);
+      return () => unsubscribe();
+    }
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ usersMembers }}>
