@@ -137,14 +137,7 @@ export default function DragDrop({data}:Props) {
 
       ).then(() => {});
         
-        let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
-        if(item){
-          UpdateRequestProgress(
-              String(item.requestId),
-              containers[overContainerIndex].id.replace("container-", ""),
-          ).then(() => {});
-        }
-      } else {
+       } else {
         // In different containers
         let newItems = [...containers];
         const [removeditem] = newItems[activeContainerIndex].items.splice(
@@ -157,13 +150,7 @@ export default function DragDrop({data}:Props) {
           removeditem
         );
         setContainers(newItems);
-        let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
-        if(item){
-          UpdateRequestProgress(
-              String(item.requestId),
-              containers[overContainerIndex].id.replace("container-", ""),
-          ).then(() => {});
-        }
+
         UpdateTaskProgress(
             String(active.id),
             containers[overContainerIndex].id.replace("container-", "")
@@ -211,13 +198,7 @@ export default function DragDrop({data}:Props) {
         String(active.id),
         String(over.id).replace("container-", "")
     ).then(() => {});
-    let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
-    if(item){
-      UpdateRequestProgress(
-          String(item.requestId),
-          containers[overContainerIndex].id.replace("container-", ""),
-      ).then(() => {});
-    }
+  
     }
   };
  
@@ -275,13 +256,6 @@ export default function DragDrop({data}:Props) {
           0,
           removeditem
         );
-        let item = containers[overContainerIndex].items.find(task=> task.id == active.id)
-        if(item){
-          UpdateRequestProgress(
-              String(item.requestId),
-              containers[overContainerIndex].id.replace("container-", ""),
-          ).then(() => {});
-        }
         UpdateTaskProgress(
           String(active.id),
           containers[overContainerIndex].id.replace("container-", "")
@@ -321,13 +295,6 @@ export default function DragDrop({data}:Props) {
         1
       );
       newItems[overContainerIndex].items.push(removeditem);
-      let item = newItems[overContainerIndex].items.find(task=> task.id == active.id)
-      if(item){
-        UpdateRequestProgress(
-            String(item.requestId),
-            containers[overContainerIndex].id.replace("container-", ""),
-        ).then(() => {});
-      }
       UpdateTaskProgress(String(active.id), String(over.id).replace("container-", "")).then(() => {});
       setContainers(newItems);
 
