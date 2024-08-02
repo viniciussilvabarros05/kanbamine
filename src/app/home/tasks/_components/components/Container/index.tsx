@@ -25,18 +25,29 @@ const Container = ({
   });
  
   function changeColor(){
-    
-    const variantsColorsContainer: Record<string, string> = {
-      "container-1": "-red_300",
-      "container-2": "-orange_300",
-      "container-3": "-green_300",
+
+    const variantsColorsBg: Record<string, string> = {
+      "container-1": "bg-red_300",
+      "container-2": "bg-orange_300",
+      "container-3": "bg-green_300",
+      default: "-zinc-400"
+    };
+    const variantsColorsText: Record<string, string> = {
+      "container-1": "text-red_300",
+      "container-2": "text-orange_300",
+      "container-3": "text-green_300",
+      default: "text-zinc-400"
+    };
+    const variantsColorsBorder: Record<string, string> = {
+      "container-1": "gradient-red_300",
+      "container-2": "gradient-orange_300",
+      "container-3": "gradient-green_300",
       default: "-zinc-400"
     };
 
-    const variantColor = id? variantsColorsContainer[id]: variantsColorsContainer.default;
-    const backgroundColor = `bg${variantColor}`;
-    const textColor = `text${variantColor}`;
-    const borderColor = `gradient${variantColor}`;
+    const backgroundColor = id? variantsColorsBg[id]: variantsColorsBg.default;
+    const textColor = id? variantsColorsText[id]: variantsColorsText.default;
+    const borderColor = id? variantsColorsBorder[id]: variantsColorsBorder.default;
 
     return( {textColor, borderColor, backgroundColor})
   }
