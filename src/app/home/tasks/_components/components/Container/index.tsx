@@ -3,15 +3,12 @@ import ContainerProps from "./container.type";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
-import { Button } from "../Button";
 import { Separator } from "@/components/ui/separator";
 
 const Container = ({
   id,
   children,
-  title = "default",
-  description,
-  onAddItem,
+  title,
 }: ContainerProps) => {
   const {
     attributes,
@@ -26,15 +23,24 @@ const Container = ({
       type: "container",
     },
   });
-  const variantsColorsContainer: any = {
-    "Para Fazer": "red_300",
-    Andamento: "orange_300",
-    Concluidas: "green_300",
-    default: "zinc-400",
-  };
-  const backgroundColor = `bg-${variantsColorsContainer[title]}`
-  const textColor = `text-${variantsColorsContainer[title]}`
-  const borderColor = `gradient-${variantsColorsContainer[title]}`
+ 
+  function changeColor(){
+    
+    const variantsColorsContainer: Record<string, string> = {
+      "container-1": "-red_300",
+      "container-2": "-orange_300",
+      "container-3": "-green_300",
+      default: "-zinc-400"
+    };
+
+    const variantColor = id? variantsColorsContainer[id]: variantsColorsContainer.default;
+    const backgroundColor = `bg${variantColor}`;
+    const textColor = `text${variantColor}`;
+    const borderColor = `gradient${variantColor}`;
+
+    return( {textColor, borderColor, backgroundColor})
+  }
+
   return (
     <div
       {...attributes}
@@ -45,19 +51,17 @@ const Container = ({
       }}
       className={clsx(
         "w-full h-full p-4 bg-[#FDFDFD] rounded-xl flex flex-col gap-y-4 border-2",
-        isDragging && "opacity-50", borderColor
+        isDragging && "opacity-50", changeColor().borderColor
       )}
     >
       <div className="flex gap-2 items-center">
-        <div className={`size-2 rounded-full ${backgroundColor}`}>
-
-        </div>
-        <h2 className={`${textColor} font-medium`}>
+        <div className={clsx("size-2 rounded-full", changeColor().backgroundColor)}/>
+        <h2 className={clsx(changeColor().textColor,"font-medium")}>
           {title}
         </h2>
 
       </div>
-      <Separator className={`${backgroundColor}`}/>
+      <Separator className={clsx(changeColor().backgroundColor)}/>
       {children}
     </div>
   );

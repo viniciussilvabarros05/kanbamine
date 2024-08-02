@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-
 // DnD
 import {
   DndContext,
@@ -25,11 +23,10 @@ import {
 import Container from "./components/Container";
 import Items from "./components/Item";
 import ModelViewTasks from "./modelViewTasks";
-import { db } from "@/_firebase/config";
 import { TaskProps } from "@/entities/task";
 import { UpdateTaskProgress } from "@/_actions/updateTaskProgress";
 import { DNDType } from "../page";
-import { UpdateRequestProgress } from "@/_actions/updateRequestProgress";
+
 
 interface Props{
     data: DNDType[]
